@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Image unavailable">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#0f0f0f"/>
+    </linearGradient>
+    <pattern id="grain" width="2" height="2" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.5" fill="#c9a96e" opacity="0.04"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="500" fill="url(#bg)"/>
+  <rect width="400" height="500" fill="url(#grain)"/>
+  <g transform="translate(200 230)" stroke="#c9a96e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65">
+    <circle cx="0" cy="-30" r="22"/>
+    <circle cx="0" cy="-30" r="6" fill="#c9a96e" opacity="0.5"/>
+    <path d="M-46 32 L-18 4 L0 22 L24 -6 L46 22"/>
+    <rect x="-58" y="-58" width="116" height="116" rx="6"/>
+  </g>
+  <text x="200" y="335" text-anchor="middle" fill="#c9a96e" opacity="0.55" font-family="Georgia, 'Times New Roman', serif" font-size="14" letter-spacing="3">SRI SHRINGAAR</text>
+  <text x="200" y="358" text-anchor="middle" fill="#f5f0e8" opacity="0.35" font-family="Helvetica, Arial, sans-serif" font-size="10" letter-spacing="3">IMAGE UNAVAILABLE</text>
+</svg>
