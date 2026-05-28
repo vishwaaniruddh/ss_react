@@ -100,6 +100,7 @@ export default function RentalProcess() {
                 <span
                   className="absolute -top-2 -right-1 text-[5rem] font-serif leading-none opacity-[0.06] pointer-events-none select-none"
                   style={{ color: 'var(--color-gold)' }}
+                  aria-hidden="true"
                 >
                   {step.number}
                 </span>

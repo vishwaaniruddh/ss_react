@@ -3,8 +3,8 @@ import SEO from '@/seo/SEO'
 import SplitText from '@/components/ui/SplitText'
 import { fadeInUp, staggerContainer, staggerItem } from '@/animations/variants'
 import { MILESTONES } from '@/utils/constants'
-import craftsmanship from '@/assets/images/craftsmanship.png'
-import bridalHero from '@/assets/images/bridal-hero.png'
+import craftsmanship from '@/assets/images/craftsmanship.webp'
+import bridalHero from '@/assets/images/bridal-hero.webp'
 
 export default function About() {
   return (

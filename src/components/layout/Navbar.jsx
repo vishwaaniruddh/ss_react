@@ -1,12 +1,11 @@
 import { useRef, useEffect, useCallback, useState } from 'react'
-import { motion, useMotionValueEvent, useScroll, AnimatePresence } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
 import {
   ShoppingBag, Heart, Search, Menu, X, ChevronDown, User,
 } from 'lucide-react'
 import { NAV_LINKS } from '@/utils/constants'
 import useStore from '@/store/useStore'
-import { navbarVariants, mobileMenuVariants, staggerContainer, staggerItem } from '@/animations/variants'
+import useAuth from '@/store/useAuth'
 
 /* ────────────────────────────────────────────────────────────────────────────
  * Utilities
@@ -175,15 +174,8 @@ function MobileNavItem({ link, depth = 0, currentPath, onNavigate }) {
         </button>
       </div>
 
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            className="overflow-hidden"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-          >
+      {open && (
+        <div className="overflow-hidden">
             <div
               className="flex flex-col gap-0.5 pt-1 pb-2"
               style={{
@@ -202,9 +194,8 @@ function MobileNavItem({ link, depth = 0, currentPath, onNavigate }) {
                 />
               ))}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
     </div>
   )
 }
@@ -216,20 +207,38 @@ function MobileNavItem({ link, depth = 0, currentPath, onNavigate }) {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [megaMenuOpen, setMegaMenuOpen] = useState(null)
-  const { scrollY } = useScroll()
   const location = useLocation()
   const { isMenuOpen, toggleMenu, closeMenu, cartCount, wishlistCount, toggleSearch } = useStore()
+  const { isLoggedIn } = useAuth()
   const navRef = useRef(null)
 
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    setScrolled(latest > 50)
-  })
+  // Simple scroll listener instead of framer-motion useScroll
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Close menu on route change
   useEffect(() => {
     closeMenu()
     setMegaMenuOpen(null)
   }, [location, closeMenu])
+
+  // Hide body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.documentElement.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.documentElement.style.overflow = ''
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.documentElement.style.overflow = ''
+      document.body.style.overflow = ''
+    }
+  }, [isMenuOpen])
 
   const handleMegaMenuEnter = useCallback((label) => {
     setMegaMenuOpen(label)
@@ -241,15 +250,14 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.header
+      <header
         ref={navRef}
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-        variants={navbarVariants}
-        animate={scrolled ? 'scrolled' : 'top'}
-        initial="top"
         style={{
-          borderBottom: scrolled ? '1px solid rgba(0, 0, 0, 0.06)' : '1px solid transparent',
-          boxShadow: scrolled ? '0 4px 24px -8px rgba(0, 0, 0, 0.08)' : 'none',
+          backgroundColor: scrolled ? 'rgba(10, 10, 10, 0.95)' : 'rgba(10, 10, 10, 1)',
+          backdropFilter: scrolled ? 'blur(12px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(201, 169, 110, 0.1)' : '1px solid transparent',
+          boxShadow: scrolled ? '0 4px 24px -8px rgba(0, 0, 0, 0.3)' : 'none',
         }}
       >
         {/* Main nav */}
@@ -262,8 +270,10 @@ export default function Navbar() {
             aria-label="Sri Shringarr — Home"
           >
             <img
-              src="/logo.png"
+              src="/logo-transparent.webp"
               alt="Sri Shringarr"
+              width="162"
+              height="48"
               className="h-12 lg:h-14 w-auto object-contain transition-transform duration-500 group-hover:scale-[1.03]"
             />
           </Link>
@@ -284,47 +294,48 @@ export default function Navbar() {
                 >
                   <Link
                     to={link.path}
-                    className="relative pt-2 pb-2 text-sm tracking-[0.08em] uppercase transition-colors duration-300 flex items-center gap-1 group"
+                    className="relative pt-2 pb-2 text-[13px] tracking-[0.12em] uppercase transition-all duration-400 flex items-center gap-1 group"
                     style={{
-                      fontFamily: 'var(--font-sans)',
-                      fontWeight: 500,
-                      color: location.pathname === link.path ? 'var(--color-gold-dark, #a3833f)' : '#3a3a3a',
+                      fontFamily: 'var(--font-serif)',
+                      fontWeight: 400,
+                      letterSpacing: '0.08em',
+                      color: location.pathname === link.path ? 'var(--color-gold)' : 'var(--color-ivory)',
                     }}
                     id={`nav-link-${idify(link.label)}`}
                   >
-                    <span className="group-hover:text-gold transition-colors duration-300">
-                      {link.label}
+                    <span className="relative overflow-hidden">
+                      <span className="inline-block transition-transform duration-300 group-hover:-translate-y-full group-hover:opacity-0">
+                        {link.label}
+                      </span>
+                      <span
+                        className="absolute left-0 top-full inline-block transition-transform duration-300 group-hover:-translate-y-full"
+                        style={{ color: 'var(--color-gold)' }}
+                      >
+                        {link.label}
+                      </span>
                     </span>
                     {hasChildren && (
                       <ChevronDown
-                        size={14}
-                        className="transition-transform duration-300"
+                        size={13}
+                        className="transition-transform duration-300 group-hover:rotate-180"
                         style={{
                           transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                         }}
                       />
                     )}
                     {/* Active indicator */}
-                    <motion.span
-                      className="absolute -bottom-1 left-0 h-px w-full origin-left"
-                      style={{ background: 'var(--color-gold)' }}
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: location.pathname === link.path ? 1 : 0 }}
-                      whileHover={{ scaleX: 1 }}
-                      transition={{ duration: 0.3 }}
+                    <span
+                      className="absolute -bottom-1 left-0 h-px w-full origin-left transition-transform duration-300"
+                      style={{
+                        background: 'var(--color-gold)',
+                        transform: location.pathname === link.path ? 'scaleX(1)' : 'scaleX(0)',
+                      }}
                     />
                   </Link>
 
                   {/* Mega menu dropdown */}
-                  <AnimatePresence>
-                    {hasChildren && isOpen && (
-                      <motion.div
-                        className="absolute top-full left-1/2 -translate-x-1/2 pt-3"
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
-                      >
+                  {hasChildren && isOpen && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3">
                         <div
                           className="rounded-xl pt-6 pb-6 pl-8 pr-8"
                           style={{
@@ -359,9 +370,8 @@ export default function Navbar() {
                             ))}
                           </div>
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                    </div>
+                  )}
                 </div>
               )
             })}
@@ -372,7 +382,7 @@ export default function Navbar() {
             <button
               onClick={toggleSearch}
               className="cursor-pointer transition-colors duration-300 hover:text-gold"
-              style={{ color: '#3a3a3a' }}
+              style={{ color: 'var(--color-ivory)' }}
               aria-label="Search"
               id="nav-search"
             >
@@ -380,9 +390,9 @@ export default function Navbar() {
             </button>
 
             <Link
-              to="/auth"
+              to={isLoggedIn ? '/account' : '/auth'}
               className="hidden lg:block transition-colors duration-300 hover:text-gold"
-              style={{ color: '#3a3a3a' }}
+              style={{ color: 'var(--color-ivory)' }}
               aria-label="Account"
               id="nav-account"
             >
@@ -392,13 +402,13 @@ export default function Navbar() {
             <Link
               to="/wishlist"
               className="hidden lg:block transition-colors duration-300 hover:text-gold relative"
-              style={{ color: '#3a3a3a' }}
+              style={{ color: 'var(--color-ivory)' }}
               aria-label="Wishlist"
               id="nav-wishlist"
             >
               <Heart size={20} strokeWidth={1.5} />
               {wishlistCount > 0 && (
-                <motion.span
+                <span
                   className="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] font-semibold"
                   style={{ background: 'var(--color-gold)', color: 'var(--color-obsidian)' }}
                   initial={{ scale: 0 }}
@@ -406,20 +416,20 @@ export default function Navbar() {
                   transition={{ type: 'spring', stiffness: 500, damping: 25 }}
                 >
                   {wishlistCount}
-                </motion.span>
+                </span>
               )}
             </Link>
 
             <Link
               to="/cart"
               className="relative transition-colors duration-300 hover:text-gold"
-              style={{ color: '#3a3a3a' }}
+              style={{ color: 'var(--color-ivory)' }}
               aria-label="Shopping Cart"
               id="nav-cart"
             >
               <ShoppingBag size={20} strokeWidth={1.5} />
               {cartCount > 0 && (
-                <motion.span
+                <span
                   className="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] font-semibold"
                   style={{ background: 'var(--color-gold)', color: 'var(--color-obsidian)' }}
                   initial={{ scale: 0 }}
@@ -427,14 +437,14 @@ export default function Navbar() {
                   transition={{ type: 'spring', stiffness: 500, damping: 25 }}
                 >
                   {cartCount}
-                </motion.span>
+                </span>
               )}
             </Link>
 
             {/* Mobile menu toggle */}
             <button
               className="lg:hidden cursor-pointer transition-colors duration-300"
-              style={{ color: '#3a3a3a' }}
+              style={{ color: 'var(--color-ivory)' }}
               onClick={toggleMenu}
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               id="nav-menu-toggle"
@@ -443,47 +453,48 @@ export default function Navbar() {
             </button>
           </div>
         </nav>
-      </motion.header>
+      </header>
 
       {/* Mobile full-screen menu */}
-      <motion.div
-        className="fixed inset-0 z-40 lg:hidden flex flex-col pl-8 pr-8 pt-24 pb-8 overflow-y-auto"
-        style={{ background: 'var(--color-obsidian)' }}
-        variants={mobileMenuVariants}
-        initial="closed"
-        animate={isMenuOpen ? 'open' : 'closed'}
-        aria-hidden={!isMenuOpen}
-      >
-        <motion.nav
-          className="flex flex-col gap-2"
-          variants={staggerContainer}
-          initial="initial"
-          animate={isMenuOpen ? 'animate' : 'initial'}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 lg:hidden overflow-y-scroll"
+          style={{
+            background: 'var(--color-obsidian)',
+            touchAction: 'pan-y',
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehavior: 'contain',
+          }}
         >
-          {NAV_LINKS.map((link) => (
-            <motion.div key={link.label} variants={staggerItem}>
-              <MobileNavItem
-                link={link}
-                currentPath={location.pathname}
-                onNavigate={closeMenu}
-              />
-            </motion.div>
-          ))}
+          <div className="px-8 pt-24 pb-12 min-h-full">
+            <nav className="flex flex-col gap-2">
+              {NAV_LINKS.map((link) => (
+                <div key={link.label}>
+                  <MobileNavItem
+                    link={link}
+                    currentPath={location.pathname}
+                    onNavigate={closeMenu}
+                  />
+                </div>
+              ))}
 
-          {/* Mobile action links */}
-          <motion.div variants={staggerItem} className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-gold/10">
-            <Link to="/auth" onClick={closeMenu} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-gold)' }}>
-              <User size={18} strokeWidth={1.5} /> Account
-            </Link>
-            <Link to="/wishlist" onClick={closeMenu} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-gold)' }}>
-              <Heart size={18} strokeWidth={1.5} /> Wishlist {wishlistCount > 0 && `(${wishlistCount})`}
-            </Link>
-            <Link to="/cart" onClick={closeMenu} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-gold)' }}>
-              <ShoppingBag size={18} strokeWidth={1.5} /> Cart {cartCount > 0 && `(${cartCount})`}
-            </Link>
-          </motion.div>
-        </motion.nav>
-      </motion.div>
+              {/* Mobile action links */}
+              <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-gold/10">
+                <Link to={isLoggedIn ? '/account' : '/auth'} onClick={closeMenu} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-gold)' }}>
+                  <User size={18} strokeWidth={1.5} /> Account
+                </Link>
+                <Link to="/wishlist" onClick={closeMenu} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-gold)' }}>
+                  <Heart size={18} strokeWidth={1.5} /> Wishlist {wishlistCount > 0 && `(${wishlistCount})`}
+                </Link>
+                <Link to="/cart" onClick={closeMenu} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-gold)' }}>
+                  <ShoppingBag size={18} strokeWidth={1.5} /> Cart {cartCount > 0 && `(${cartCount})`}
+                </Link>
+              </div>
+            </nav>
+          </div>
+        </div>
+      )}
     </>
   )
 }
+

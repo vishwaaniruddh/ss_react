@@ -15,31 +15,41 @@ export function useLenis() {
   const lenisRef = useRef(null)
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-      infinite: false,
-    })
+    // Defer Lenis init to after first paint to avoid blocking LCP
+    // Only enable on desktop — mobile uses native scroll
+    const isMobile = window.innerWidth < 1024
+    if (isMobile) return // Skip Lenis entirely on mobile
 
-    lenisRef.current = lenis
-    lenisInstance = lenis
+    const timer = setTimeout(() => {
+      const lenis = new Lenis({
+        duration: 1.0,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 0.8,
+        touchMultiplier: 1.5,
+        infinite: false,
+      })
 
-    function raf(time) {
-      lenis.raf(time)
+      lenisRef.current = lenis
+      lenisInstance = lenis
+
+      function raf(time) {
+        lenis.raf(time)
+        requestAnimationFrame(raf)
+      }
+
       requestAnimationFrame(raf)
-    }
-
-    requestAnimationFrame(raf)
+    }, 100)
 
     return () => {
-      lenis.destroy()
-      lenisRef.current = null
-      if (lenisInstance === lenis) lenisInstance = null
+      clearTimeout(timer)
+      if (lenisRef.current) {
+        lenisRef.current.destroy()
+        if (lenisInstance === lenisRef.current) lenisInstance = null
+        lenisRef.current = null
+      }
     }
   }, [])
 

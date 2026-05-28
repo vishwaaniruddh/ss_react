@@ -4,7 +4,7 @@ import { Star, Quote, ExternalLink, RefreshCcw, Sparkles } from 'lucide-react'
 import SEO from '@/seo/SEO'
 import useGoogleReviews from '@/hooks/useGoogleReviews'
 import { staggerContainer, staggerItem } from '@/animations/variants'
-import { TESTIMONIALS } from '@/utils/constants'
+import testimonials from '@/data/testimonials.json'
 
 /**
  * ClientDiary — public reviews wall.
@@ -13,7 +13,7 @@ import { TESTIMONIALS } from '@/utils/constants'
  *   - Fetches live Google reviews from our cached PHP proxy.
  *   - Renders them in a masonry-ish responsive grid with avatar, rating,
  *     time, and the review body.
- *   - Falls back to the curated TESTIMONIALS list when Google is offline,
+ *   - Falls back to the curated testimonials JSON when Google is offline,
  *     not yet configured, or returns an empty review array. The fallback
  *     is shaped so the same card component can render either source.
  */
@@ -229,17 +229,17 @@ function HeaderSummary({ data, isLoading, fallbackCount }) {
 export default function ClientDiary() {
   const { reviews: liveReviews, data, isLoading, error, refetch } = useGoogleReviews()
 
-  // Convert curated TESTIMONIALS into the same shape as live reviews so the
+  // Convert curated testimonials into the same shape as live reviews so the
   // card component renders either source identically.
   const fallbackReviews = useMemo(
     () =>
-      TESTIMONIALS.map((t) => ({
-        author_name: t.name,
-        profile_photo_url: null,
-        rating: t.rating,
-        relative_time_description: t.location,
+      testimonials.map((t) => ({
+        author_name: t.client_name,
+        profile_photo_url: t.profile_pic,
+        rating: 5,
+        relative_time_description: 'Verified Client',
         time: 0,
-        text: t.text,
+        text: t.client_feedbacks,
         language: 'en',
       })),
     [],

@@ -18,6 +18,9 @@ const Wishlist = lazy(() => import('@/pages/Wishlist'))
 const Cart = lazy(() => import('@/pages/Cart'))
 const Checkout = lazy(() => import('@/pages/Checkout'))
 const Auth = lazy(() => import('@/pages/Auth'))
+const Account = lazy(() => import('@/pages/Account'))
+const Testimonials = lazy(() => import('@/pages/Testimonials'))
+const NotFound = lazy(() => import('@/pages/NotFound'))
 
 // Loading fallback
 function PageLoader() {
@@ -66,12 +69,15 @@ export const router = createBrowserRouter([
       { path: 'faq', element: <SuspenseWrapper><FAQ /></SuspenseWrapper> },
       { path: 'how-it-works', element: <SuspenseWrapper><HowItWorks /></SuspenseWrapper> },
       { path: 'client-diary', element: <SuspenseWrapper><ClientDiary /></SuspenseWrapper> },
+      { path: 'testimonials', element: <SuspenseWrapper><Testimonials /></SuspenseWrapper> },
       { path: 'wishlist', element: <SuspenseWrapper><Wishlist /></SuspenseWrapper> },
       { path: 'cart', element: <SuspenseWrapper><Cart /></SuspenseWrapper> },
       { path: 'checkout', element: <SuspenseWrapper><Checkout /></SuspenseWrapper> },
       { path: 'login', element: <SuspenseWrapper><Auth /></SuspenseWrapper> },
       { path: 'register', element: <SuspenseWrapper><Auth /></SuspenseWrapper> },
       { path: 'auth', element: <SuspenseWrapper><Auth /></SuspenseWrapper> },
+      { path: 'account', element: <SuspenseWrapper><Account /></SuspenseWrapper> },
+      { path: '*', element: <SuspenseWrapper><NotFound /></SuspenseWrapper> },
     ],
   },
-])
+], { basename: '/' })

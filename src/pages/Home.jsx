@@ -1,13 +1,20 @@
+import { lazy, Suspense } from 'react'
 import SEO from '@/seo/SEO'
 import { organizationSchema } from '@/seo/schemas'
 import Hero from '@/sections/Hero'
 import MarqueeSection from '@/sections/MarqueeSection'
-import BridalShowcase from '@/sections/BridalShowcase'
-import FeaturedProducts from '@/sections/FeaturedProducts'
-import CollectionsGrid from '@/sections/CollectionsGrid'
-import RentalProcess from '@/sections/RentalProcess'
-import VideoSection from '@/sections/VideoSection'
-import TestimonialSection from '@/sections/TestimonialSection'
+
+// Lazy-load below-fold sections to reduce initial bundle and main-thread work
+const BridalShowcase = lazy(() => import('@/sections/BridalShowcase'))
+const FeaturedProducts = lazy(() => import('@/sections/FeaturedProducts'))
+const CollectionsGrid = lazy(() => import('@/sections/CollectionsGrid'))
+const RentalProcess = lazy(() => import('@/sections/RentalProcess'))
+const VideoSection = lazy(() => import('@/sections/VideoSection'))
+const TestimonialSection = lazy(() => import('@/sections/TestimonialSection'))
+
+function LazySection({ children }) {
+  return <Suspense fallback={null}>{children}</Suspense>
+}
 
 export default function Home() {
   return (
@@ -20,12 +27,12 @@ export default function Home() {
 
       <Hero />
       <MarqueeSection />
-      <BridalShowcase />
-      <FeaturedProducts />
-      <CollectionsGrid />
-      <RentalProcess />
-      <VideoSection />
-      <TestimonialSection />
+      <LazySection><BridalShowcase /></LazySection>
+      <LazySection><FeaturedProducts /></LazySection>
+      <LazySection><CollectionsGrid /></LazySection>
+      <LazySection><RentalProcess /></LazySection>
+      <LazySection><VideoSection /></LazySection>
+      <LazySection><TestimonialSection /></LazySection>
     </>
   )
 }

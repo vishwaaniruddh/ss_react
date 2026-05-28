@@ -140,12 +140,12 @@ export const letterReveal = {
 // Navbar variants
 export const navbarVariants = {
   top: {
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: 'rgba(10, 10, 10, 1)',
     backdropFilter: 'blur(0px)',
   },
   scrolled: {
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    backdropFilter: 'blur(0px)',
+    backgroundColor: 'rgba(10, 10, 10, 0.95)',
+    backdropFilter: 'blur(12px)',
   },
 }
 
@@ -154,11 +154,13 @@ export const mobileMenuVariants = {
   closed: {
     opacity: 0,
     x: '100%',
+    pointerEvents: 'none',
     transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
   },
   open: {
     opacity: 1,
     x: 0,
+    pointerEvents: 'auto',
     transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
   },
 }

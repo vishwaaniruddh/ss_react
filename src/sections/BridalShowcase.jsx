@@ -2,8 +2,8 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import Button from '@/components/ui/Button'
 import SplitText from '@/components/ui/SplitText'
-import bridalHero from '@/assets/images/bridal-hero.png'
-import collectionTemple from '@/assets/images/collection-temple.png'
+import bridalHero from '@/assets/images/bridal-hero.webp'
+import collectionTemple from '@/assets/images/collection-temple.webp'
 
 export default function BridalShowcase() {
   const containerRef = useRef(null)
@@ -78,12 +78,12 @@ export default function BridalShowcase() {
             {/* Caption overlay */}
             <div className="absolute bottom-8 left-8 right-8">
               <p className="label-text mb-2" style={{ color: 'var(--color-gold)' }}>Bridal Couture 2024</p>
-              <h3
+              <h2
                 className="text-2xl lg:text-3xl font-medium"
                 style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-ivory)' }}
               >
                 The Maharani Collection
-              </h3>
+              </h2>
             </div>
           </motion.div>
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ChevronRight as ChevronCrumb } from 'lucide-react'
@@ -34,6 +34,15 @@ function useResolvedBridalCategory() {
 export default function BridalCollections() {
   const { node, isAll, missing } = useResolvedBridalCategory()
   const [sort, setSort] = useState('sku_desc')
+  const [hiddenIds, setHiddenIds] = useState(new Set())
+
+  const handleImageInvalid = useCallback((id) => {
+    setHiddenIds((prev) => {
+      const next = new Set(prev)
+      next.add(id)
+      return next
+    })
+  }, [])
 
   const categoryQuery = node ? buildCategoryQuery(node) : null
 
@@ -241,8 +250,8 @@ export default function BridalCollections() {
                 key={`${node?.type}-${node?.id}-${sort}`}
               >
                 {items.map((product, i) => (
-                  <motion.div key={product.id} variants={staggerItem}>
-                    <ProductCard product={product} index={i} />
+                  <motion.div key={product.id} variants={staggerItem} style={{ display: hiddenIds.has(product.id) ? 'none' : undefined }}>
+                    <ProductCard product={product} index={i} onImageInvalid={handleImageInvalid} />
                   </motion.div>
                 ))}
               </motion.div>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -64,6 +64,8 @@ export default function ProductDetails() {
 
   const [activeImage, setActiveImage] = useState(0)
   const [selectedDuration, setSelectedDuration] = useState(DEFAULT_DURATION)
+  const [orderMode, setOrderMode] = useState('rent') // 'rent' | 'buy'
+
   const [dateRange, setDateRange] = useState(() => {
     // Default pickup is the earliest allowed date (today + lead time), with
     // the minimum rental length already filled in. Users can override either
@@ -175,6 +177,7 @@ export default function ProductDetails() {
     addToCart(
       {
         ...product,
+        orderType: 'rent',
         rental: {
           days: actualDays,
           startDate: dateRange.start,
@@ -189,6 +192,20 @@ export default function ProductDetails() {
       1
     )
     showToast(`Reserved ${product.name} for ${actualDays} days.`, { type: 'success' })
+  }
+
+  const handleBuyNow = () => {
+    addToCart(
+      {
+        ...product,
+        orderType: 'purchase',
+        rental: null,
+        // Use sale price for purchase
+        price: product.salePrice ?? product.mrp ?? product.price,
+      },
+      1
+    )
+    showToast(`Added ${product.name} to cart for purchase.`, { type: 'success' })
   }
 
   const breadcrumbs = [
@@ -372,146 +389,246 @@ export default function ProductDetails() {
 
               <div className="luxury-divider mb-8 mt-6" style={{ opacity: 0.15 }} />
 
-              <div className="mb-6">
-                <p
-                  className="label-text mb-3 flex items-center gap-2"
-                  style={{ color: 'var(--color-ivory-muted)' }}
-                >
-                  <CalendarRange size={14} /> Rental Duration
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {RENTAL_DURATIONS.map((d) => {
-                    const active = selectedDuration === d
-                    return (
-                      <button
-                        key={d}
-                        type="button"
-                        onClick={() => handleDurationChange(d)}
-                        className="pl-4 pr-4 pt-2 pb-2 rounded-full text-xs tracking-[0.08em] uppercase transition-all duration-300 cursor-pointer"
-                        style={{
-                          fontFamily: 'var(--font-sans)',
-                          background: active ? 'var(--color-gold)' : 'transparent',
-                          color: active ? 'var(--color-obsidian)' : 'var(--color-ivory-muted)',
-                          border: `1px solid ${active ? 'var(--color-gold)' : 'rgba(201, 169, 110, 0.2)'}`,
-                          fontWeight: active ? 600 : 400,
-                        }}
-                        aria-pressed={active}
-                      >
-                        {d} {d === 1 ? 'Day' : 'Days'}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <DateRangePicker
-                  value={dateRange}
-                  onChange={handleDateChange}
-                  minDate={addDays(new Date(), LEAD_TIME_DAYS)}
-                  maxDate={addDays(new Date(), MAX_LOOKAHEAD_DAYS)}
-                  isDateDisabled={(d) => isDateBooked(d, product)}
-                  validateRange={validateRange}
-                  onInvalid={(message) => showToast(message, { type: 'error' })}
-                />
-                <p
-                  className="mt-2 text-[0.7rem] tracking-[0.04em]"
-                  style={{ color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
-                >
-                  Earliest pickup is {LEAD_TIME_DAYS} days from today. Rentals
-                  run {MIN_RENTAL_DAYS}–{MAX_RENTAL_DAYS} days.
-                </p>
-              </div>
-
-              <div
-                className="rounded-xl p-5 mb-8"
-                style={{
-                  background: 'rgba(201, 169, 110, 0.06)',
-                  border: '1px solid rgba(201, 169, 110, 0.15)',
-                }}
-              >
-                <div
-                  className="flex items-center justify-between mb-3 text-sm"
-                  style={{ color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
-                >
-                  <span>
-                    Rental for {actualDays} {actualDays === 1 ? 'day' : 'days'}
-                    {actualDays > BASE_RENTAL_DAYS && (
-                      <span className="ml-1" style={{ color: 'var(--color-gold)', opacity: 0.7 }}>
-                        (incl. {actualDays - BASE_RENTAL_DAYS}-day premium)
-                      </span>
-                    )}
-                  </span>
-                  <span style={{ color: 'var(--color-ivory)' }}>{formatPrice(rentTotalValue)}</span>
-                </div>
-                <div
-                  className="flex items-center justify-between mb-3 text-sm"
-                  style={{ color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
-                >
-                  <span className="flex items-center gap-1">
-                    Refundable Deposit
-                    <Info size={12} aria-label="Returned after the piece is returned in good condition." />
-                  </span>
-                  <span style={{ color: 'var(--color-ivory)' }}>{formatPrice(deposit)}</span>
-                </div>
-                <div
-                  className="pt-3 mt-3 flex items-center justify-between"
-                  style={{ borderTop: '1px solid rgba(201, 169, 110, 0.15)' }}
-                >
-                  <span className="label-text" style={{ color: 'var(--color-ivory)' }}>
-                    Payable Now
-                  </span>
-                  <span
-                    className="text-xl font-semibold"
-                    style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-gold)' }}
-                  >
-                    {formatPrice(grandTotal)}
-                  </span>
-                </div>
-                {dateRange.start && dateRange.end && (
-                  <p
-                    className="mt-3 text-xs"
-                    style={{ color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
-                  >
-                    Pickup {formatDate(dateRange.start)} • Return {formatDate(dateRange.end)}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex gap-4 mb-10">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  className="flex-1"
-                  onClick={handleAddToBag}
-                  disabled={!product.inStock}
-                  id="product-add-to-bag"
-                >
-                  <ShoppingBag size={16} />{' '}
-                  {product.inStock
-                    ? `Reserve for ${actualDays} ${actualDays === 1 ? 'Day' : 'Days'}`
-                    : 'Unavailable'}
-                </Button>
-                <motion.button
-                  className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 cursor-pointer"
+              {/* Rent / Buy mode toggle */}
+              <div className="flex gap-2 mb-6">
+                <button
+                  type="button"
+                  onClick={() => setOrderMode('rent')}
+                  className="flex-1 py-3 rounded-lg text-xs tracking-[0.1em] uppercase font-medium transition-all duration-300 cursor-pointer"
                   style={{
-                    border: '1px solid rgba(201, 169, 110, 0.3)',
-                    background: wishlisted ? 'var(--color-gold)' : 'transparent',
+                    fontFamily: 'var(--font-sans)',
+                    background: orderMode === 'rent' ? 'var(--color-gold)' : 'transparent',
+                    color: orderMode === 'rent' ? 'var(--color-obsidian)' : 'var(--color-ivory-muted)',
+                    border: `1px solid ${orderMode === 'rent' ? 'var(--color-gold)' : 'rgba(201, 169, 110, 0.2)'}`,
                   }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => toggleWishlist(product)}
-                  aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-                  aria-pressed={wishlisted}
-                  id="product-wishlist-toggle"
                 >
-                  <Heart
-                    size={18}
-                    fill={wishlisted ? 'var(--color-obsidian)' : 'none'}
-                    style={{ color: wishlisted ? 'var(--color-obsidian)' : 'var(--color-gold)' }}
-                  />
-                </motion.button>
+                  Rent
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOrderMode('buy')}
+                  className="flex-1 py-3 rounded-lg text-xs tracking-[0.1em] uppercase font-medium transition-all duration-300 cursor-pointer"
+                  style={{
+                    fontFamily: 'var(--font-sans)',
+                    background: orderMode === 'buy' ? 'var(--color-gold)' : 'transparent',
+                    color: orderMode === 'buy' ? 'var(--color-obsidian)' : 'var(--color-ivory-muted)',
+                    border: `1px solid ${orderMode === 'buy' ? 'var(--color-gold)' : 'rgba(201, 169, 110, 0.2)'}`,
+                  }}
+                >
+                  Buy
+                </button>
               </div>
+
+              {orderMode === 'rent' ? (
+                <>
+                  <div className="mb-6">
+                    <p
+                      className="label-text mb-3 flex items-center gap-2"
+                      style={{ color: 'var(--color-ivory-muted)' }}
+                    >
+                      <CalendarRange size={14} /> Rental Duration
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {RENTAL_DURATIONS.map((d) => {
+                        const active = selectedDuration === d
+                        return (
+                          <button
+                            key={d}
+                            type="button"
+                            onClick={() => handleDurationChange(d)}
+                            className="pl-4 pr-4 pt-2 pb-2 rounded-full text-xs tracking-[0.08em] uppercase transition-all duration-300 cursor-pointer"
+                            style={{
+                              fontFamily: 'var(--font-sans)',
+                              background: active ? 'var(--color-gold)' : 'transparent',
+                              color: active ? 'var(--color-obsidian)' : 'var(--color-ivory-muted)',
+                              border: `1px solid ${active ? 'var(--color-gold)' : 'rgba(201, 169, 110, 0.2)'}`,
+                              fontWeight: active ? 600 : 400,
+                            }}
+                            aria-pressed={active}
+                          >
+                            {d} {d === 1 ? 'Day' : 'Days'}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="mb-6">
+                    <DateRangePicker
+                      value={dateRange}
+                      onChange={handleDateChange}
+                      minDate={addDays(new Date(), LEAD_TIME_DAYS)}
+                      maxDate={addDays(new Date(), MAX_LOOKAHEAD_DAYS)}
+                      isDateDisabled={(d) => isDateBooked(d, product)}
+                      validateRange={validateRange}
+                      onInvalid={(message) => showToast(message, { type: 'error' })}
+                    />
+                    <p
+                      className="mt-2 text-[0.7rem] tracking-[0.04em]"
+                      style={{ color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
+                    >
+                      Earliest pickup is {LEAD_TIME_DAYS} days from today. Rentals
+                      run {MIN_RENTAL_DAYS}–{MAX_RENTAL_DAYS} days.
+                    </p>
+                  </div>
+
+                  <div
+                    className="rounded-xl p-5 mb-8"
+                    style={{
+                      background: 'rgba(201, 169, 110, 0.06)',
+                      border: '1px solid rgba(201, 169, 110, 0.15)',
+                    }}
+                  >
+                    <div
+                      className="flex items-center justify-between mb-3 text-sm"
+                      style={{ color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
+                    >
+                      <span>
+                        Rental for {actualDays} {actualDays === 1 ? 'day' : 'days'}
+                        {actualDays > BASE_RENTAL_DAYS && (
+                          <span className="ml-1" style={{ color: 'var(--color-gold)', opacity: 0.7 }}>
+                            (incl. {actualDays - BASE_RENTAL_DAYS}-day premium)
+                          </span>
+                        )}
+                      </span>
+                      <span style={{ color: 'var(--color-ivory)' }}>{formatPrice(rentTotalValue)}</span>
+                    </div>
+                    <div
+                      className="flex items-center justify-between mb-3 text-sm"
+                      style={{ color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
+                    >
+                      <span className="flex items-center gap-1">
+                        Refundable Deposit
+                        <Info size={12} aria-label="Returned after the piece is returned in good condition." />
+                      </span>
+                      <span style={{ color: 'var(--color-ivory)' }}>{formatPrice(deposit)}</span>
+                    </div>
+                    <div
+                      className="pt-3 mt-3 flex items-center justify-between"
+                      style={{ borderTop: '1px solid rgba(201, 169, 110, 0.15)' }}
+                    >
+                      <span className="label-text" style={{ color: 'var(--color-ivory)' }}>
+                        Payable Now
+                      </span>
+                      <span
+                        className="text-xl font-semibold"
+                        style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-gold)' }}
+                      >
+                        {formatPrice(grandTotal)}
+                      </span>
+                    </div>
+                    {dateRange.start && dateRange.end && (
+                      <p
+                        className="mt-3 text-xs"
+                        style={{ color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
+                      >
+                        Pickup {formatDate(dateRange.start)} • Return {formatDate(dateRange.end)}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex gap-4 mb-10">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      className="flex-1"
+                      onClick={handleAddToBag}
+                      disabled={!product.inStock}
+                      id="product-add-to-bag"
+                    >
+                      <ShoppingBag size={16} />{' '}
+                      {product.inStock
+                        ? `Reserve for ${actualDays} ${actualDays === 1 ? 'Day' : 'Days'}`
+                        : 'Unavailable'}
+                    </Button>
+                    <motion.button
+                      className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 cursor-pointer"
+                      style={{
+                        border: '1px solid rgba(201, 169, 110, 0.3)',
+                        background: wishlisted ? 'var(--color-gold)' : 'transparent',
+                      }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => toggleWishlist(product)}
+                      aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+                      aria-pressed={wishlisted}
+                      id="product-wishlist-toggle"
+                    >
+                      <Heart
+                        size={18}
+                        fill={wishlisted ? 'var(--color-obsidian)' : 'none'}
+                        style={{ color: wishlisted ? 'var(--color-obsidian)' : 'var(--color-gold)' }}
+                      />
+                    </motion.button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Purchase mode */}
+                  <div
+                    className="rounded-xl p-5 mb-8"
+                    style={{
+                      background: 'rgba(201, 169, 110, 0.06)',
+                      border: '1px solid rgba(201, 169, 110, 0.15)',
+                    }}
+                  >
+                    <div
+                      className="flex items-center justify-between mb-3 text-sm"
+                      style={{ color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
+                    >
+                      <span>Purchase Price</span>
+                      <span
+                        className="text-xl font-semibold"
+                        style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-gold)' }}
+                      >
+                        {formatPrice(product.salePrice ?? product.mrp ?? product.price)}
+                      </span>
+                    </div>
+                    {product.originalPrice && (
+                      <div
+                        className="flex items-center justify-between text-sm"
+                        style={{ color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
+                      >
+                        <span>MRP</span>
+                        <span className="line-through">{formatPrice(product.originalPrice)}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-4 mb-10">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      className="flex-1"
+                      onClick={handleBuyNow}
+                      disabled={!product.inStock}
+                      id="product-buy-now"
+                    >
+                      <ShoppingBag size={16} />{' '}
+                      {product.inStock ? 'Add to Cart — Purchase' : 'Unavailable'}
+                    </Button>
+                    <motion.button
+                      className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 cursor-pointer"
+                      style={{
+                        border: '1px solid rgba(201, 169, 110, 0.3)',
+                        background: wishlisted ? 'var(--color-gold)' : 'transparent',
+                      }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => toggleWishlist(product)}
+                      aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+                      aria-pressed={wishlisted}
+                      id="product-wishlist-toggle-buy"
+                    >
+                      <Heart
+                        size={18}
+                        fill={wishlisted ? 'var(--color-obsidian)' : 'none'}
+                        style={{ color: wishlisted ? 'var(--color-obsidian)' : 'var(--color-gold)' }}
+                      />
+                    </motion.button>
+                  </div>
+                </>
+              )}
 
               <ul className="grid grid-cols-3 gap-4 list-none">
                 {[
@@ -595,6 +712,16 @@ export default function ProductDetails() {
  * else in the collection to show.
  * ──────────────────────────────────────────────────────────────────────────── */
 function RelatedProducts({ product }) {
+  const [hiddenIds, setHiddenIds] = useState(new Set())
+
+  const handleImageInvalid = useCallback((id) => {
+    setHiddenIds((prev) => {
+      const next = new Set(prev)
+      next.add(id)
+      return next
+    })
+  }, [])
+
   const categoryQuery = useMemo(() => {
     if (product?.catId == null) return null
     if (product.type === 'garments') return `garment:${product.catId}`
@@ -660,8 +787,8 @@ function RelatedProducts({ product }) {
             viewport={{ once: true }}
           >
             {related.map((p, i) => (
-              <motion.div key={p.id} variants={staggerItem}>
-                <ProductCard product={p} index={i} />
+              <motion.div key={p.id} variants={staggerItem} style={{ display: hiddenIds.has(p.id) ? 'none' : undefined }}>
+                <ProductCard product={p} index={i} onImageInvalid={handleImageInvalid} />
               </motion.div>
             ))}
           </motion.div>

@@ -92,7 +92,7 @@ export default function Cart() {
                     const lineRent = item.price * item.quantity
                     const lineDeposit = deposit * item.quantity
                     const linePayable = lineRent + lineDeposit
-                    const isRental = days != null
+                    const isRental = item.orderType === 'rent' || days != null
 
                     return (
                       <motion.article
@@ -142,6 +142,16 @@ export default function Cart() {
                                 >
                                   {item.name}
                                 </Link>
+                                {/* Order type badge */}
+                                <span
+                                  className="inline-block mt-1 text-[9px] tracking-[0.15em] uppercase font-semibold px-2 py-0.5 rounded"
+                                  style={{
+                                    background: isRental ? 'rgba(201, 169, 110, 0.15)' : 'rgba(93, 26, 27, 0.3)',
+                                    color: isRental ? 'var(--color-gold)' : 'var(--color-ivory)',
+                                  }}
+                                >
+                                  {isRental ? 'Rental' : 'Purchase'}
+                                </span>
                                 {item.collection && (
                                   <p
                                     className="text-xs mt-1"
@@ -220,7 +230,7 @@ export default function Cart() {
                             <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 text-[12.5px]">
                               <div className="flex justify-between">
                                 <span style={{ color: 'var(--color-ivory-muted)' }}>
-                                  Rent {item.quantity > 1 && `× ${item.quantity}`}
+                                  {isRental ? 'Rent' : 'Price'} {item.quantity > 1 && `× ${item.quantity}`}
                                 </span>
                                 <span style={{ color: 'var(--color-ivory)' }}>
                                   {formatPrice(lineRent)}

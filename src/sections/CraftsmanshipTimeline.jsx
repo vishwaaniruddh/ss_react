@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { MILESTONES } from '@/utils/constants'
 import { staggerContainer, staggerItem } from '@/animations/variants'
 import SplitText from '@/components/ui/SplitText'
-import craftsmanship from '@/assets/images/craftsmanship.png'
+import craftsmanship from '@/assets/images/craftsmanship.webp'
 
 export default function CraftsmanshipTimeline() {
   return (

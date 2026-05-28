@@ -54,25 +54,9 @@ const imagePreflightCache = new Map()
 function preflightImage(src) {
   if (!src) return Promise.resolve(false)
   if (isLocalPlaceholder(src)) return Promise.resolve(false)
-  if (imagePreflightCache.has(src)) return imagePreflightCache.get(src)
-
-  const promise = new Promise((resolve) => {
-    const img = new Image()
-    let settled = false
-    const finish = (ok) => {
-      if (settled) return
-      settled = true
-      resolve(ok)
-    }
-    img.onload = () => finish(true)
-    img.onerror = () => finish(false)
-    img.src = src
-    // Safety: don't hold the card hostage if the network never resolves.
-    setTimeout(() => finish(true), 8000)
-  })
-
-  imagePreflightCache.set(src, promise)
-  return promise
+  // Skip network preflight — let ProductImage handle errors via onError fallback.
+  // This avoids double-loading every image (once for check, once for display).
+  return Promise.resolve(true)
 }
 
 export default function ProductCard({ product, onImageInvalid }) {
@@ -117,9 +101,11 @@ export default function ProductCard({ product, onImageInvalid }) {
     toggleWishlist(product)
   }
 
-  // Don't render the card at all when the image is known-bad. Returning
-  // `null` lets the parent grid collapse the slot cleanly.
+  // Don't render the card at all when the image is known-bad.
   if (imageState === 'invalid') return null
+
+  // When pending, hide visually but don't take up space
+  if (imageState === 'pending') return null
 
   return (
     <motion.article
@@ -128,7 +114,6 @@ export default function ProductCard({ product, onImageInvalid }) {
       initial="rest"
       whileHover="hover"
       layout
-      style={{ opacity: imageState === 'pending' ? 0 : 1, transition: 'opacity 250ms ease' }}
     >
       <Link
         to={productUrl(product)}
@@ -239,21 +224,45 @@ export default function ProductCard({ product, onImageInvalid }) {
         >
           {product.name}
         </h3>
-        <div className="flex items-center gap-3">
-          <span
-            className="text-sm font-medium"
-            style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-ivory)' }}
-          >
-            {formatPrice(product.price)}
-          </span>
-          {product.originalPrice && (
+        <div className="flex flex-col gap-1 mt-1">
+          {/* Rent price (primary) */}
+          <div className="flex items-center gap-2">
             <span
-              className="text-sm line-through"
-              style={{ fontFamily: 'var(--font-sans)', color: 'rgba(245, 240, 232, 0.4)' }}
+              className="text-[0.6rem] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded"
+              style={{ background: 'rgba(201, 169, 110, 0.15)', color: 'var(--color-gold)', fontFamily: 'var(--font-sans)' }}
             >
-              {formatPrice(product.originalPrice)}
+              Rent
             </span>
-          )}
+            <span
+              className="text-sm font-medium"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-ivory)' }}
+            >
+              {formatPrice(product.rentPrice || product.price)}
+            </span>
+          </div>
+          {/* Sale/Buy price */}
+          <div className="flex items-center gap-2">
+            <span
+              className="text-[0.6rem] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded"
+              style={{ background: 'rgba(93, 26, 27, 0.3)', color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
+            >
+              Buy
+            </span>
+            <span
+              className="text-sm font-medium"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-ivory-muted)' }}
+            >
+              {formatPrice(product.price)}
+            </span>
+            {product.originalPrice && (
+              <span
+                className="text-xs line-through"
+                style={{ fontFamily: 'var(--font-sans)', color: 'rgba(245, 240, 232, 0.6)' }}
+              >
+                {formatPrice(product.originalPrice)}
+              </span>
+            )}
+          </div>
         </div>
         {product.rating && (
           <div className="flex items-center gap-1 mt-2">

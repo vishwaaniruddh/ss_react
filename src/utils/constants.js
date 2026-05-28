@@ -229,80 +229,41 @@ export const COLLECTIONS = [
     name: 'Bridal Heritage',
     description: 'Timeless bridal jewellery crafted with centuries-old techniques, celebrating the sacred bond of marriage.',
     productCount: 48,
+    path: '/jewellery',
   },
   {
     id: 'temple-collection',
     name: 'Temple Collection',
     description: 'Inspired by the divine artistry of South Indian temple architecture, each piece is a devotion in gold.',
     productCount: 32,
+    path: '/jewellery',
   },
   {
     id: 'royal-legacy',
     name: 'Royal Legacy',
     description: 'Jewellery that echoes the grandeur of Indian royalty — Mughal precision meets Rajput splendor.',
     productCount: 24,
+    path: '/jewellery',
   },
   {
     id: 'bridal-couture',
     name: 'Bridal Couture',
     description: 'Handwoven bridal apparels adorned with the finest embroidery, for the bride who commands attention.',
     productCount: 18,
+    path: '/bridal',
   },
 ]
 
 /**
  * Testimonials
  *
- * NOTE: These are brand-aligned placeholder reviews. Google's review platform
- * gates verbatim review text behind their JS widget so we couldn't scrape it
- * directly. Replace each entry below with the real Google review (text,
- * reviewer name, and city/date) when you have access to copy them over —
- * keep the same shape so the carousel needs no further changes.
+ * Real client testimonials are now stored in @/data/testimonials.json
+ * with the following structure per entry:
+ *   - client_name
+ *   - client_feedbacks
+ *   - profile_pic
+ *   - client_photos_with_products (array)
  */
-export const TESTIMONIALS = [
-  {
-    id: 1,
-    name: 'Aanya Mehta',
-    location: 'Mumbai · Bride',
-    text: 'I rented my entire bridal look — lehenga, choker, hath phool, everything. The fit was custom and the pieces arrived in pristine condition a day before. The studio team made the process effortless.',
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: 'Riya Desai',
-    location: 'Pune · Reception',
-    text: 'A stunning gown that I wore for one night without the guilt of a wardrobe full of unworn couture. The deposit refund came through within days. Truly the smartest way to do bridal in 2024.',
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: 'Snehal Patil',
-    location: 'Mumbai · Sangeet',
-    text: 'The kundan set I rented was heirloom-grade — better than what I had seen in showrooms at three times the price. Every stone was set with such precision. Genuinely felt like royalty.',
-    rating: 5,
-  },
-  {
-    id: 4,
-    name: 'Nidhi Agarwal',
-    location: 'Bengaluru · Engagement',
-    text: 'Don\'t Repeat It, Rent It — they live up to the tagline. Pan-India shipping was reliable, the trial-at-home option was a lifesaver, and the team genuinely cared that everything looked perfect on me.',
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: 'Tanya Kapoor',
-    location: 'Mumbai · Wedding',
-    text: 'Their Vile Parle studio is a hidden gem. The team helps you mix and match jewellery with the outfit so everything ties together. I left feeling like I had my own personal stylist.',
-    rating: 5,
-  },
-  {
-    id: 6,
-    name: 'Pooja Shah',
-    location: 'Surat · Mother of the Bride',
-    text: 'I was sceptical about renting at first, but the quality won me over. The pieces look new, fit beautifully, and the rental window was generous enough for our three-day wedding. Highly recommend.',
-    rating: 5,
-  },
-]
 
 /**
  * Brand milestones for craftsmanship timeline
@@ -340,8 +301,6 @@ export const MILESTONES = [
  */
 export const MARQUEE_ITEMS = [
   'Handcrafted Heritage',
-  '✦',
-  '22 Karat Gold',
   '✦',
   'Bridal Excellence',
   '✦',

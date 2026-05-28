@@ -4,10 +4,10 @@ import { COLLECTIONS } from '@/utils/constants'
 import SplitText from '@/components/ui/SplitText'
 import { staggerContainer, staggerItem } from '@/animations/variants'
 import { ArrowUpRight } from 'lucide-react'
-import heroNecklace from '@/assets/images/hero-necklace.png'
-import collectionTemple from '@/assets/images/collection-temple.png'
-import productChoker from '@/assets/images/product-choker.png'
-import bridalHero from '@/assets/images/bridal-hero.png'
+import heroNecklace from '@/assets/images/hero-necklace.webp'
+import collectionTemple from '@/assets/images/collection-temple.webp'
+import productChoker from '@/assets/images/product-choker.webp'
+import bridalHero from '@/assets/images/bridal-hero.webp'
 
 const collectionImages = [heroNecklace, collectionTemple, productChoker, bridalHero]
 
@@ -50,7 +50,7 @@ export default function CollectionsGrid() {
           {COLLECTIONS.map((collection, index) => (
             <motion.div key={collection.id} variants={staggerItem}>
               <Link
-                to={`/collections/${collection.id}`}
+                to={collection.path}
                 className="group relative block overflow-hidden rounded-2xl aspect-[16/9]"
                 id={`collection-${collection.id}`}
               >

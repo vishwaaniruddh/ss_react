@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { resolve } from 'path'
 
 export default defineConfig({
+  base: '/',
   plugins: [
     react(),
     tailwindcss(),
@@ -48,12 +49,18 @@ export default defineConfig({
     // CORS isn't enforced. Production should hit the API directly via
     // VITE_API_BASE_URL (or share the origin) — see src/utils/api.js.
     proxy: {
-      '/api/v1': {
-        target: 'https://srishringarr.com',
+      '/API/v1': {
+        target: 'http://localhost/ss',
         changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/api\/v1/, '/API/v1'),
+        secure: false,
       },
+      // Fallback to live server if local isn't available
+      // Uncomment below and comment above to use live server:
+      // '/API/v1': {
+      //   target: 'https://srishringarr.com',
+      //   changeOrigin: true,
+      //   secure: true,
+      // },
     },
   },
 })

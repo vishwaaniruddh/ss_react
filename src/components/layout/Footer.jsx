@@ -275,7 +275,7 @@ export default function Footer() {
         >
           <p
             className="text-[11px] tracking-[0.15em]"
-            style={{ color: 'rgba(245, 240, 232, 0.35)', fontFamily: 'var(--font-sans)' }}
+            style={{ color: 'rgba(245, 240, 232, 0.55)', fontFamily: 'var(--font-sans)' }}
           >
             © {new Date().getFullYear()} Sri Shringarr Fashion Studio. All rights reserved.
           </p>
@@ -290,7 +290,7 @@ export default function Footer() {
             </span>
             <button
               onClick={scrollToTop}
-              className="text-[10px] tracking-[0.22em] uppercase text-gold/60 hover:text-gold transition-colors duration-300 cursor-pointer border-b border-gold/20 pb-0.5 hover:border-gold"
+              className="text-[10px] tracking-[0.22em] uppercase text-gold hover:text-gold transition-colors duration-300 cursor-pointer border-b border-gold/40 pb-0.5 hover:border-gold"
               id="footer-back-to-top"
             >
               Back to Top

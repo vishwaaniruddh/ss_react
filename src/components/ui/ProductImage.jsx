@@ -7,6 +7,21 @@ import { useEffect, useState } from 'react'
 export const PRODUCT_PLACEHOLDER = '/placeholder-product.svg'
 
 /**
+ * Route an external product image URL through our WebP proxy for
+ * automatic resizing and format conversion. Only proxies URLs from
+ * our own domain's upload folder.
+ */
+function proxyUrl(src, width = 400) {
+  if (!src) return src
+  const s = String(src)
+  // Only proxy images from our uploads folder
+  if (s.includes('/yn/uploads/') || s.includes('/uploads/')) {
+    return `/API/v1/image-proxy.php?url=${encodeURIComponent(s)}&w=${width}&q=70`
+  }
+  return s
+}
+
+/**
  * Resolve a usable image URL for a product, with placeholder fallback.
  *
  * Used outside React (e.g. SEO meta) where the runtime onError dance
@@ -41,7 +56,7 @@ export default function ProductImage({
   fallback = PRODUCT_PLACEHOLDER,
   ...rest
 }) {
-  const initial = resolveProductImage(src) === PRODUCT_PLACEHOLDER ? fallback : src
+  const initial = resolveProductImage(src) === PRODUCT_PLACEHOLDER ? fallback : proxyUrl(src)
   const [currentSrc, setCurrentSrc] = useState(initial)
   const [didFallback, setDidFallback] = useState(initial === fallback)
 
@@ -55,7 +70,7 @@ export default function ProductImage({
       setCurrentSrc(fallback)
       setDidFallback(true)
     } else {
-      setCurrentSrc(next)
+      setCurrentSrc(proxyUrl(next))
       setDidFallback(false)
     }
   }, [src, fallback])

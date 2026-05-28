@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'react-router-dom'
 import { X } from 'lucide-react'
@@ -37,6 +37,15 @@ export default function Shop() {
 
   const [activeKey, setActiveKey] = useState('all')
   const [sort, setSort] = useState('sku_desc')
+  const [hiddenIds, setHiddenIds] = useState(new Set())
+
+  const handleImageInvalid = useCallback((id) => {
+    setHiddenIds((prev) => {
+      const next = new Set(prev)
+      next.add(id)
+      return next
+    })
+  }, [])
 
   const activeChip = useMemo(
     () => FILTER_CHIPS.find((c) => c.key === activeKey) || ALL_CHIP,
@@ -249,8 +258,8 @@ export default function Shop() {
                 key={`${activeKey}-${sort}-${searchQuery}`}
               >
                 {items.map((product, i) => (
-                  <motion.div key={product.id} variants={staggerItem}>
-                    <ProductCard product={product} index={i} />
+                  <motion.div key={product.id} variants={staggerItem} style={{ display: hiddenIds.has(product.id) ? 'none' : undefined }}>
+                    <ProductCard product={product} index={i} onImageInvalid={handleImageInvalid} />
                   </motion.div>
                 ))}
               </motion.div>
