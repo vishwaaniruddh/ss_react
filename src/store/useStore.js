@@ -40,6 +40,12 @@ const useStore = create(
       removeToast: (id) =>
         set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 
+      // ─────────────────────── Coupon ────────────────────────
+      coupon: null, // { code, discount, discountType, couponAmount }
+
+      applyCoupon: (coupon) => set({ coupon }),
+      removeCoupon: () => set({ coupon: null }),
+
       // ─────────────────────── Cart actions ──────────────────────
       addToCart: (product, quantity = 1) => {
         const { cart } = get()
@@ -112,6 +118,7 @@ const useStore = create(
         cartCount: state.cartCount,
         wishlist: state.wishlist,
         wishlistCount: state.wishlistCount,
+        coupon: state.coupon,
       }),
       // Heal counters from arrays in case a migration drifts them apart.
       onRehydrateStorage: () => (state) => {

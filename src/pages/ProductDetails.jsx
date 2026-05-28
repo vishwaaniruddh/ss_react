@@ -82,6 +82,26 @@ export default function ProductDetails() {
     setActiveImage(0)
   }, [product?.id])
 
+  // Track product view
+  useEffect(() => {
+    if (!product?.id) return
+    const params = new URLSearchParams(window.location.search)
+    fetch(`/API/v1/track-view.php`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        productId: product.id,
+        productName: product.name,
+        productType: product.type,
+        referrer: document.referrer,
+        utmSource: params.get('utm_source') || '',
+        utmMedium: params.get('utm_medium') || '',
+        utmCampaign: params.get('utm_campaign') || '',
+      }),
+    }).catch(() => {}) // Fire and forget — don't block UI
+  }, [product?.id, product?.name, product?.type])
+
   /* ── Loading / error / not-found views ──────────────────────────────── */
 
   if (productId == null) return <NotFoundState />

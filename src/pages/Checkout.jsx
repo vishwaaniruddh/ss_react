@@ -28,7 +28,7 @@ function loadRazorpay() {
 
 export default function Checkout() {
   const navigate = useNavigate()
-  const { cart, getCartTotal, clearCart } = useStore()
+  const { cart, getCartTotal, clearCart, coupon, removeCoupon } = useStore()
   const { isLoggedIn, user } = useAuth()
   const [step, setStep] = useState('shipping') // shipping | processing | success | failed
   const [error, setError] = useState('')
@@ -110,7 +110,8 @@ export default function Checkout() {
 
   const subtotal = getCartTotal()
   const depositTotal = cart.reduce((acc, item) => acc + (item.rental?.deposit || 0) * item.quantity, 0)
-  const total = subtotal + depositTotal
+  const discount = coupon?.discount || 0
+  const total = Math.max(0, subtotal + depositTotal - discount)
 
   const handleInputChange = (e) => {
     setShipping({ ...shipping, [e.target.name]: e.target.value })
@@ -235,6 +236,7 @@ export default function Checkout() {
                     deposit: item.rental.deposit,
                   } : null,
                 })),
+                couponCode: coupon?.code || null,
               }),
             })
             const verifyData = await verifyRes.json()
@@ -243,6 +245,7 @@ export default function Checkout() {
               setOrderId(verifyData.order_id)
               setStep('success')
               clearCart()
+              removeCoupon()
             } else {
               setError(verifyData.message || 'Payment verification failed')
               setStep('failed')
@@ -400,9 +403,15 @@ export default function Checkout() {
                       </div>
                     )}
                     <div className="flex justify-between">
-                      <span style={{ color: 'var(--color-ivory-muted)' }}>Shipping</span>
+                      <span style={{ color: 'var(--color-gold)' }}>Shipping</span>
                       <span style={{ color: 'var(--color-gold)' }}>Free</span>
                     </div>
+                    {discount > 0 && (
+                      <div className="flex justify-between">
+                        <span style={{ color: '#22c55e' }}>Discount ({coupon?.code})</span>
+                        <span style={{ color: '#22c55e' }}>− {formatPrice(discount)}</span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="luxury-divider my-4" style={{ opacity: 0.15 }} />

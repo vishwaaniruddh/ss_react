@@ -1,7 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  Trash2, ShoppingBag, ArrowRight, CalendarRange, Edit3, Shield, Truck,
+  Trash2, ShoppingBag, ArrowRight, CalendarRange, Edit3, Shield, Truck, Tag, X,
 } from 'lucide-react'
 import SEO from '@/seo/SEO'
 import SplitText from '@/components/ui/SplitText'
@@ -9,6 +10,7 @@ import Button from '@/components/ui/Button'
 import ProductImage from '@/components/ui/ProductImage'
 import useStore from '@/store/useStore'
 import { formatPrice, formatDate, productUrl } from '@/utils/helpers'
+import { API_BASE_URL } from '@/utils/api'
 
 /**
  * Calculate aggregate rental totals across cart items.
@@ -28,10 +30,43 @@ function calculateTotals(cart) {
 }
 
 export default function Cart() {
-  const { cart, removeFromCart } = useStore()
+  const { cart, removeFromCart, coupon, applyCoupon, removeCoupon } = useStore()
   const { rentSubtotal, depositTotal } = calculateTotals(cart)
   const shipping = rentSubtotal > 50000 ? 0 : 0 // Rentals: complimentary doorstep delivery
-  const total = rentSubtotal + depositTotal + shipping
+  const discount = coupon?.discount || 0
+  const total = Math.max(0, rentSubtotal + depositTotal + shipping - discount)
+
+  // Coupon input state
+  const [couponInput, setCouponInput] = useState('')
+  const [couponError, setCouponError] = useState('')
+  const [applyingCoupon, setApplyingCoupon] = useState(false)
+
+  const handleApplyCoupon = async () => {
+    if (!couponInput.trim()) {
+      setCouponError('Please enter a coupon code')
+      return
+    }
+    setApplyingCoupon(true)
+    setCouponError('')
+    try {
+      const res = await fetch(`${API_BASE_URL}/validate-coupon.php`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponInput.trim(), cartTotal: rentSubtotal + depositTotal }),
+      })
+      const data = await res.json()
+      if (data.status === 'success') {
+        applyCoupon(data.coupon)
+        setCouponInput('')
+      } else {
+        setCouponError(data.message || 'Invalid coupon')
+      }
+    } catch {
+      setCouponError('Failed to validate coupon')
+    }
+    setApplyingCoupon(false)
+  }
 
   return (
     <>
@@ -330,6 +365,78 @@ export default function Cart() {
                       <span style={{ color: 'var(--color-ivory-muted)' }}>Shipping</span>
                       <span style={{ color: 'var(--color-gold)' }}>Complimentary</span>
                     </div>
+
+                    {/* Coupon section */}
+                    <div className="pt-2">
+                      {coupon ? (
+                        <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)' }}>
+                          <div className="flex items-center gap-2">
+                            <Tag size={14} style={{ color: '#22c55e' }} />
+                            <div>
+                              <p className="text-xs font-semibold" style={{ color: '#22c55e' }}>
+                                {coupon.code}
+                              </p>
+                              <p className="text-[10px]" style={{ color: 'var(--color-ivory-muted)' }}>
+                                {coupon.discountType === 'percent' ? `${coupon.couponAmount}% off` : `Flat ₹${coupon.couponAmount} off`}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={removeCoupon}
+                            className="p-1 rounded hover:bg-white/5 cursor-pointer"
+                            style={{ color: 'var(--color-ivory-muted)' }}
+                            aria-label="Remove coupon"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={couponInput}
+                              onChange={(e) => { setCouponInput(e.target.value.toUpperCase()); setCouponError('') }}
+                              onKeyDown={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                              placeholder="Coupon code"
+                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none"
+                              style={{
+                                background: 'rgba(10,10,10,0.4)',
+                                border: '1px solid rgba(201,169,110,0.2)',
+                                color: 'var(--color-ivory)',
+                                fontFamily: 'var(--font-sans)',
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={handleApplyCoupon}
+                              disabled={applyingCoupon}
+                              className="px-4 py-2 rounded-lg text-[10px] tracking-wider uppercase font-semibold cursor-pointer disabled:opacity-50"
+                              style={{
+                                background: 'rgba(201,169,110,0.15)',
+                                border: '1px solid rgba(201,169,110,0.3)',
+                                color: 'var(--color-gold)',
+                                fontFamily: 'var(--font-sans)',
+                              }}
+                            >
+                              {applyingCoupon ? '...' : 'Apply'}
+                            </button>
+                          </div>
+                          {couponError && (
+                            <p className="text-[11px] mt-1.5" style={{ color: '#ef4444' }}>{couponError}</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Discount line */}
+                    {discount > 0 && (
+                      <div className="flex justify-between body-sm">
+                        <span style={{ color: '#22c55e' }}>Discount</span>
+                        <span style={{ color: '#22c55e' }}>− {formatPrice(discount)}</span>
+                      </div>
+                    )}
 
                     <div
                       className="luxury-divider"

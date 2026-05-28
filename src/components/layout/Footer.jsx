@@ -4,6 +4,7 @@ import { MapPin, Phone, Mail } from 'lucide-react'
 import { staggerContainer, staggerItem, fadeInUp } from '@/animations/variants'
 import { getLenis } from '@/hooks/useLenis'
 import { useState } from 'react'
+import { API_BASE_URL } from '@/utils/api'
 
 const footerLinks = {
   Collections: [
@@ -73,14 +74,34 @@ const socialLinks = [
 export default function Footer() {
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault()
-    if (email) {
-      setSubscribed(true)
-      setEmail('')
-      setTimeout(() => setSubscribed(false), 3000)
+    if (!email) return
+    setError('')
+    setSubmitting(true)
+    try {
+      const formData = new URLSearchParams()
+      formData.append('email', email)
+      const res = await fetch(`${API_BASE_URL}/subscribe.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString(),
+      })
+      const data = await res.json()
+      if (data.status === 'success') {
+        setSubscribed(true)
+        setEmail('')
+        setTimeout(() => setSubscribed(false), 4000)
+      } else {
+        setError(data.message || 'Subscription failed')
+      }
+    } catch {
+      setError('Something went wrong. Please try again.')
     }
+    setSubmitting(false)
   }
 
   const scrollToTop = () => {
@@ -146,7 +167,8 @@ export default function Footer() {
             />
             <motion.button
               type="submit"
-              className="px-7 py-3 rounded-full text-[11px] font-semibold tracking-[0.18em] uppercase transition-all duration-500 cursor-pointer shadow-lg hover:shadow-gold/10"
+              disabled={submitting}
+              className="px-7 py-3 rounded-full text-[11px] font-semibold tracking-[0.18em] uppercase transition-all duration-500 cursor-pointer shadow-lg hover:shadow-gold/10 disabled:opacity-60"
               style={{
                 background: subscribed
                   ? 'linear-gradient(135deg, #4ade80, #22c55e)'
@@ -158,9 +180,17 @@ export default function Footer() {
               whileTap={{ scale: 0.97 }}
               id="newsletter-submit"
             >
-              {subscribed ? '✓ Subscribed' : 'Subscribe'}
+              {submitting ? '...' : subscribed ? '✓ Subscribed' : 'Subscribe'}
             </motion.button>
           </form>
+          {error && (
+            <p className="text-xs mt-2" style={{ color: '#ef4444' }}>{error}</p>
+          )}
+          {subscribed && (
+            <p className="text-xs mt-2" style={{ color: '#22c55e' }}>
+              Check your inbox — we sent you a welcome email.
+            </p>
+          )}
         </motion.div>
       </div>
 
