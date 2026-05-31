@@ -12,6 +12,7 @@ import SplitText from '@/components/ui/SplitText'
 import ProductCard from '@/components/ui/ProductCard'
 import ProductImage, { PRODUCT_PLACEHOLDER } from '@/components/ui/ProductImage'
 import DateRangePicker from '@/components/ui/DateRangePicker'
+import ComparisonButton from '@/components/ui/ComparisonButton'
 import { RENTAL_DURATIONS } from '@/utils/constants'
 import {
   addDays, dailyRentalRate, formatDate, formatPrice, parseProductSlug,
@@ -581,6 +582,11 @@ export default function ProductDetails() {
                       />
                     </motion.button>
                   </div>
+
+                  {/* Comparison Button */}
+                  <div className="mb-10">
+                    <ComparisonButton product={product} variant="button" size="md" className="w-full" />
+                  </div>
                 </>
               ) : (
                 <>
@@ -702,13 +708,31 @@ export default function ProductDetails() {
               >
                 About this piece
               </h2>
-              <p
+              <div
                 className="body-lg"
-                style={{ color: 'var(--color-ivory-muted)', lineHeight: 1.8 }}
+                style={{ color: 'var(--color-ivory-muted)' }}
                 itemProp="description"
-              >
-                {product.description}
-              </p>
+                dangerouslySetInnerHTML={{
+                  __html: product.description
+                    .replace(/â€¢/g, '•')
+                    .replace(/â€"/g, '—')
+                    .replace(/â€™/g, "'")
+                    .replace(/â€œ/g, '"')
+                    .replace(/â€/g, '"')
+                    .split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line)
+                    .map(line => {
+                      // If line starts with bullet, make it a list item
+                      if (line.startsWith('•')) {
+                        return `<li style="margin-bottom: 0.75rem; line-height: 1.8;">${line.substring(1).trim()}</li>`
+                      }
+                      return `<p style="margin-bottom: 1rem; line-height: 1.8;">${line}</p>`
+                    })
+                    .join('')
+                    .replace(/(<li[^>]*>.*<\/li>)/s, '<ul style="list-style: disc; padding-left: 1.5rem; margin-bottom: 1rem;">$1</ul>')
+                }}
+              />
             </div>
           </div>
         </section>

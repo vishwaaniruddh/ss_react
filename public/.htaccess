@@ -2,6 +2,113 @@
   RewriteEngine On
   RewriteBase /
   
+  # Legacy URL redirects (301 permanent redirects)
+  Redirect 301 /login.php /auth
+  Redirect 301 /yn/client_diary.php /client-diary
+  Redirect 301 /register.php /auth
+  Redirect 301 /imitation_jewellery_on_rent /jewellery
+  Redirect 301 /contact_us.php /contact
+  Redirect 301 /faq.php /faq
+  Redirect 301 /rent_earrings /jewellery/earrings
+  Redirect 301 /client_diary.php /client-diary
+  Redirect 301 /terms_conditions.php /terms
+  Redirect 301 /yn/termsConditions.php /terms
+  Redirect 301 /yn/contact_us.php /contact
+  Redirect 301 /account/orders.php /account
+  Redirect 301 /lehenga_choli_on_rent /lehenga-choli
+  Redirect 301 /rent_rajasthani_style_borla /borlas
+  Redirect 301 /american_diamond_necklace_on_rent /jewellery/necklace-sets/american-diamond
+  Redirect 301 /rent_kamarpatta /jewellery/kamar-patta
+  Redirect 301 /gowns_on_rent /bridal/evening-gowns
+  Redirect 301 /rent_bridal_payal /jewellery/payal-pag-pan
+  Redirect 301 /indo_western_lehenga_on_rent /bridal/indo-western-outfits
+  Redirect 301 /south_indian_jewellery_on_rent /jewellery/necklace-sets/south-indian-set
+  Redirect 301 /rent_kundan_bridal_earrings /jewellery/earrings/kundan
+  Redirect 301 /rent_mala_long_necklace /jewellery/mala
+  Redirect 301 /bridal_hathphool_on_rent /jewellery/hath-phool
+  Redirect 301 /rent_pendant_set /jewellery/necklace-sets/south-indian-set
+  Redirect 301 /rent_mathapatti_on_lehenga /jewellery/damini-mathapatti
+  Redirect 301 /policy.php /terms
+  Redirect 301 /antique_jewellery_on_rent_in_mumbai /jewellery/necklace-sets/antique
+  Redirect 301 /rent_hair_accessories /jewellery/hair-accessories
+  Redirect 301 /rent_mangtikka /jewellery/tikka
+  Redirect 301 /rent_bridal_bangles /jewellery/bangles
+  Redirect 301 /antique_earrings_on_rent /jewellery/earrings/antique
+  Redirect 301 /bridal_jewellery /jewellery/bridal-jewellery
+  Redirect 301 /rent_vilandi_earrings /jewellery/earrings/vilandi
+  Redirect 301 /trail_gown_on_rent /bridal/trail-gowns
+  Redirect 301 /history_jewel.php /shop
+  Redirect 301 /getJewelProductsSameCategory.php /shop
+  Redirect 301 /history_apparel.php /shop
+  Redirect 301 /like_apparel.php /shop
+  Redirect 301 /enquiry /contact
+  Redirect 301 /list /shop
+  Redirect 301 /baju_bandh /jewellery/baju-bandh
+  Redirect 301 /getApparelProductsSameCategory.php /bridal
+  Redirect 301 /rent_vilandi_necklace_set /jewellery/necklace-sets/vilandi-polki
+  Redirect 301 /forget_password.php /auth
+  Redirect 301 /kundan_bridal_set_on_rent /jewellery/necklace-sets/kundan
+  
+  Redirect 301 /addcart_process_demo.php /cart
+  
+  # Query string based redirects (must use RewriteRule)
+  RewriteCond %{QUERY_STRING} ^type=jewel_main:27$
+  RewriteRule ^category\.php$ /jewellery/hair-accessories? [R=301,L]
+  
+  RewriteCond %{QUERY_STRING} ^type=jewel_main:19$
+  RewriteRule ^sub_category\.php$ /jewellery/tikka? [R=301,L]
+  
+  # bill.php with any query string → redirect to shop
+  RewriteCond %{QUERY_STRING} .
+  RewriteRule ^bill\.php$ /shop? [R=301,L]
+  
+  # Smart product redirects - send old product URLs to redirect handler
+  # Handles: /apparel/Rent_Product_Name&anything=value → /product/product-name-{id}
+  # Handles: /jewel/Rent_Product_Name&&anything=value → /product/product-name-{id}
+  RewriteRule ^apparel/Rent_(.+?)(&+.*)?$ /redirect.php?slug=$1 [L,QSA]
+  RewriteRule ^jewel/Rent_(.+?)(&+.*)?$ /redirect.php?slug=$1 [L,QSA]
+  
+  # /yn/ legacy paths → redirect to shop
+  RewriteRule ^/yn/jewel/.+ /shop? [R=301,L]
+  RewriteRule ^/yn/apparel/.+ /shop? [R=301,L]
+  
+  # ===== V2 LEGACY URL REDIRECTS (detail.php / list.php) =====
+  # detail.php?id=XXXX → route to PHP resolver that 301s to /product/...-XXXX
+  RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$)
+  RewriteCond %{QUERY_STRING} (^|&)type=([0-9]+)(&|$) [OR]
+  RewriteCond %{QUERY_STRING} !type=
+  RewriteRule ^detail\.php$ /redirect-resolver.php? [L]
+  
+  # jewel_detail.php?id=XXXX&type=X&days=X → route to PHP resolver
+  RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$)
+  RewriteRule ^jewel_detail\.php$ /redirect-resolver.php? [L]
+  
+  # apparel_detail.php?id=XXXX&days=X&page=X → route to PHP resolver
+  RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$)
+  RewriteRule ^apparel_detail\.php$ /redirect-resolver.php?type=2 [L]
+  
+  # apparel_detail.php?name=Rent_Product_Name&days=X → route to redirect.php
+  RewriteCond %{QUERY_STRING} (^|&)name=([^&]+)(&|$)
+  RewriteRule ^apparel_detail\.php$ /redirect.php? [L,QSA]
+  
+  # jewel_detail.php?name=Rent_Product_Name&days=X → route to redirect.php
+  RewriteCond %{QUERY_STRING} (^|&)name=([^&]+)(&|$)
+  RewriteRule ^jewel_detail\.php$ /redirect.php? [L,QSA]
+  
+  # list.php (category pages) → send to main shop/jewellery
+  RewriteRule ^list\.php$ /shop? [R=301,L]
+  
+  # old account pages → React account route (or login)
+  RewriteRule ^account/.*$ /account [R=301,L]
+  
+  # /yn/ legacy paths → redirect to shop (must be before pattern-based redirects)
+  RewriteRule ^yn/jewel/.+ /shop? [R=301,L]
+  RewriteRule ^yn/apparel/.+ /shop? [R=301,L]
+  
+  # Pattern-based redirects (must use RewriteRule)
+  RewriteRule ^apparel/.+ /bridal? [R=301,L]
+  RewriteRule ^jewel/.+ /jewellery? [R=301,L]
+  
   # Force HTTPS (eliminates redirect delay for direct HTTP requests)
   RewriteCond %{HTTPS} off
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
@@ -12,18 +119,26 @@
   
   # Don't rewrite API, uploads, or admin paths
   RewriteCond %{REQUEST_URI} !^/API/
-  RewriteCond %{REQUEST_URI} !^/yn/
   RewriteCond %{REQUEST_URI} !^/admin/
   RewriteCond %{REQUEST_URI} !^/pos
   
-  # Otherwise, redirect to index.html (React Router handles it)
-  RewriteRule ^ index.html [QSA,L]
+  # Use PHP handler to serve React app with proper 404 status codes
+  RewriteRule ^ 404-handler.php [QSA,L]
 </IfModule>
 
 # HSTS — tell browsers to always use HTTPS (eliminates redirect on repeat visits)
 <IfModule mod_headers.c>
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
 </IfModule>
+
+# Force XML MIME type for sitemap files
+<Files "sitemap-products.xml">
+  ForceType application/xml
+</Files>
+
+<Files "sitemap.xml">
+  ForceType application/xml
+</Files>
 
 # Enable gzip compression
 <IfModule mod_deflate.c>

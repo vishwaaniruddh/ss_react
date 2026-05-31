@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Pages -->
+  <url><loc>https://srishringarr.com/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/shop</loc><priority>0.9</priority><changefreq>daily</changefreq></url>
+  <url><loc>https://srishringarr.com/about</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://srishringarr.com/contact</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://srishringarr.com/testimonials</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://srishringarr.com/how-it-works</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://srishringarr.com/faq</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://srishringarr.com/terms</loc><priority>0.3</priority><changefreq>yearly</changefreq></url>
+  <url><loc>https://srishringarr.com/client-diary</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>
+
+  <!-- Bridal Wear -->
+  <url><loc>https://srishringarr.com/bridal</loc><priority>0.9</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/bridal/evening-gowns</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/bridal/indo-western-outfits</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/bridal/lehenga-choli</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/bridal/trail-gowns</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+
+  <!-- Jewellery Main Categories -->
+  <url><loc>https://srishringarr.com/jewellery</loc><priority>0.9</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/baju-bandh</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/bangles</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/borlas</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/bracelet</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/bridal-jewellery</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/damini-mathapatti</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/earrings</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/hair-accessories</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/hath-phool</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/tikka</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/kamar-patta</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/mala</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/necklace-sets</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/payal-pag-pan</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/pendant-set</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+
+  <!-- Jewellery Sub-Categories: Earrings -->
+  <url><loc>https://srishringarr.com/jewellery/earrings/antique</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/earrings/bugadi</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/earrings/diamond</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/earrings/imitation</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/earrings/kundan</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/earrings/oxidized</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/earrings/vilandi</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+
+  <!-- Jewellery Sub-Categories: Necklace Sets -->
+  <url><loc>https://srishringarr.com/jewellery/necklace-sets/american-diamond</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/necklace-sets/antique</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/necklace-sets/imitation</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/necklace-sets/kundan</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/necklace-sets/south-indian-set</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://srishringarr.com/jewellery/necklace-sets/vilandi-polki</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+</urlset>

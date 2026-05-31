@@ -1,0 +1,612 @@
+{
+  "C:\\xampp\\htdocs\\ss\\client\\convert-images.mjs": {
+    "mtime": 1779916770.685177,
+    "ast_hash": "50e040649e5f9430e0915786a43fb73f",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\eslint.config.js": {
+    "mtime": 1779884695.3159225,
+    "ast_hash": "fa91453358b56681481f75f81d1bfccd",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\fix-layout.js": {
+    "mtime": 1779884695.3159225,
+    "ast_hash": "20ec635a362ca4dbc1da4a65cbd2feab",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\package.json": {
+    "mtime": 1779916752.7621286,
+    "ast_hash": "45f95de0592b6810242c2ea1310ab249",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\screenshot.mjs": {
+    "mtime": 1779884695.3912206,
+    "ast_hash": "3f8d476b00d3d71c1e4b63055e8b1639",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\vite.config.js": {
+    "mtime": 1779968851.5506277,
+    "ast_hash": "a74af74c03daedfa89b578f26b20f901",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\404-handler.php": {
+    "mtime": 1780171305.2416778,
+    "ast_hash": "78d18a78b01ec072ab0a03751a68b368",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\redirect-resolver.php": {
+    "mtime": 1780169560.7228644,
+    "ast_hash": "6ac8d240c176c6cc0610d163d525a5ba",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\redirect.php": {
+    "mtime": 1780173826.413896,
+    "ast_hash": "00fb677bb96f67dd6229a4b212826b40",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\redirect_test.php": {
+    "mtime": 1780137673.7185082,
+    "ast_hash": "f4bc004930b3aca178c3ed13159bdd7b",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\sitemap-products.php": {
+    "mtime": 1780122155.7048852,
+    "ast_hash": "1eaa011ca338bb1f333c6c4e2360948d",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\test-redirect.php": {
+    "mtime": 1780173777.1640656,
+    "ast_hash": "33015819e98fd896c94b88580b870952",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\App.jsx": {
+    "mtime": 1779953672.928103,
+    "ast_hash": "efc59c910a2090a8603d450b92177ae2",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\main.jsx": {
+    "mtime": 1779884695.469342,
+    "ast_hash": "a9e9243ab8ec67744bc269fc0215256a",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\animations\\gsapUtils.js": {
+    "mtime": 1779884695.3912206,
+    "ast_hash": "74adf587190972ad7230b85c580c5c47",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\animations\\variants.js": {
+    "mtime": 1779916022.1902342,
+    "ast_hash": "b559a3961825657578bde9edb286179c",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\3d\\JewelleryScene.jsx": {
+    "mtime": 1779884695.4380958,
+    "ast_hash": "67eaebf7a5c07dc5936b73c3c82961a0",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\layout\\Footer.jsx": {
+    "mtime": 1779997976.743856,
+    "ast_hash": "2e5c3b11cddefe45e4c8891f93c4193d",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\layout\\Navbar.jsx": {
+    "mtime": 1779956702.2002883,
+    "ast_hash": "622b4bd91138d9761288bccbdb2e2788",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\layout\\PageWrapper.jsx": {
+    "mtime": 1779884695.4380958,
+    "ast_hash": "3f5be0362f3ffa07a7d4430e88d9af7d",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\Button.jsx": {
+    "mtime": 1779884695.4380958,
+    "ast_hash": "bc6d12e5ac091a008e93a347ca976e56",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\DateRangePicker.jsx": {
+    "mtime": 1779884695.4380958,
+    "ast_hash": "5f4ea58ef5b94fe943004a3980e90bc0",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\InfiniteScrollSentinel.jsx": {
+    "mtime": 1779884695.4380958,
+    "ast_hash": "96faf2f60917abca6b684db6c4dd7d49",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\LoadingScreen.jsx": {
+    "mtime": 1779884695.4380958,
+    "ast_hash": "c2cc68b877c01e3e2ab3f439c5b0bff7",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\Marquee.jsx": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "3323bba6be4f8f95d0257bb03113f3cc",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\ProductCard.jsx": {
+    "mtime": 1780256120.7548883,
+    "ast_hash": "8e0808fb94cd1370e7e386abe1f62998",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\ProductImage.jsx": {
+    "mtime": 1779950995.8803456,
+    "ast_hash": "de58e97c8f74a9fe70d49f6a7ac831af",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\SearchOverlay.jsx": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "8a506962044d2875e2e406a1a0f6053e",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\SplitText.jsx": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "93ab14b950ababe6b43ed4360df6ca96",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\Toaster.jsx": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "2b8c543896a9fa613f0268d65893ddb9",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\data\\testimonials.json": {
+    "mtime": 1779885890.385158,
+    "ast_hash": "67b034bc15a07a834dd296d3abd56389",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useGoogleReviews.js": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "dd404be9106410b85adeca27d0fb1e73",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useInfiniteProducts.js": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "1ea2319f57053115b1b66cb4e3136dc8",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useInstagramFeed.js": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "85f058a7a139172939f6fd4d01ab4c28",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useLenis.js": {
+    "mtime": 1779953030.504351,
+    "ast_hash": "cd6859cc6ddc85177d8279c1ee18473f",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useMediaQuery.js": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "02f004826b23d3ea420039fe939ad595",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useMousePosition.js": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "92ea58d465fd50aab211d78420e6e8ea",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useProduct.js": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "0f0a32dac442bd4ca6132a8a27503767",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useProducts.js": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "905c101d388f9a1606fea56183d76143",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useProductSearch.js": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "802c5f2a344cf6295e6a44b50bb8cd4b",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useReducedMotion.js": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "45de283887a4c0ccb00000b3780688f2",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\hooks\\useScrollProgress.js": {
+    "mtime": 1779884695.4537218,
+    "ast_hash": "0e4685cb7c83fd910ba04e6845598a11",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\layouts\\MainLayout.jsx": {
+    "mtime": 1780256215.557477,
+    "ast_hash": "a6550830a933731d1fe5922d37ae2e28",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\About.jsx": {
+    "mtime": 1779916931.3611326,
+    "ast_hash": "f6629821f8dd7bdbb611c01f7a24de28",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Account.jsx": {
+    "mtime": 1780051382.5454245,
+    "ast_hash": "1b6664f87140090ecaccfd49c4601e3e",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Auth.jsx": {
+    "mtime": 1779967315.0604742,
+    "ast_hash": "37c1358a77fc86cd0d91176650cbbacf",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\BridalCollections.jsx": {
+    "mtime": 1779889337.1473243,
+    "ast_hash": "e4f0028a19d3869ae424e159268e0bfc",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Cart.jsx": {
+    "mtime": 1780035939.2236536,
+    "ast_hash": "2349ddf83c3e32342ee1dfda3971a9b6",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Checkout.jsx": {
+    "mtime": 1780036124.1559737,
+    "ast_hash": "00d903ae1472f12255773625e33b0166",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\ClientDiary.jsx": {
+    "mtime": 1779885608.3631916,
+    "ast_hash": "6b815b2cc86dc8e7b9baf5891548b543",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Contact.jsx": {
+    "mtime": 1779884695.469342,
+    "ast_hash": "547b2e37632bf4534186c9a0169db3ab",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\FAQ.jsx": {
+    "mtime": 1779884695.469342,
+    "ast_hash": "4196814e6bda7c1367d303f988f0712b",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Home.jsx": {
+    "mtime": 1779917486.4739525,
+    "ast_hash": "f2dfdf2054e39d4d1d103676ac062bfd",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\HowItWorks.jsx": {
+    "mtime": 1779884695.469342,
+    "ast_hash": "11181ba00855d1f0eb7773e35d5370e0",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\JewelleryCollections.jsx": {
+    "mtime": 1779889384.9609008,
+    "ast_hash": "b6d11e636599afd305485ce9364e13bc",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\NotFound.jsx": {
+    "mtime": 1780171293.0469909,
+    "ast_hash": "3325b1beaaee4e8e0c9789d26c4ddbab",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\OrderDetails.jsx": {
+    "mtime": 1780051373.2270467,
+    "ast_hash": "1924350ee41077d091bdfe88dfa844b3",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\ProductDetails.jsx": {
+    "mtime": 1780256175.2906654,
+    "ast_hash": "b69b88097e1ea1bad6463478d1f3d3cf",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Shop.jsx": {
+    "mtime": 1779889448.966582,
+    "ast_hash": "4b5dadf33108586e6b9c011366ddf115",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Terms.jsx": {
+    "mtime": 1779884695.469342,
+    "ast_hash": "f3ad36fe72f7f2731452add4783f4fc3",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Testimonials.jsx": {
+    "mtime": 1779885532.7390633,
+    "ast_hash": "d11e3f57a1bc0b2a119f48cead5ec838",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Wishlist.jsx": {
+    "mtime": 1779884695.469342,
+    "ast_hash": "1f676b5557d15227dcee6163d65c679a",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\routes\\index.jsx": {
+    "mtime": 1780256202.624844,
+    "ast_hash": "b6bf9949ee127525c9fb4f1746773290",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\sections\\BridalShowcase.jsx": {
+    "mtime": 1779952262.9017153,
+    "ast_hash": "7e518db83c38a610888a34bf928e3c77",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\sections\\CollectionsGrid.jsx": {
+    "mtime": 1779916865.6014187,
+    "ast_hash": "bf6bf84f218a463c7d55a87fc2102619",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\sections\\CraftsmanshipTimeline.jsx": {
+    "mtime": 1779916905.531468,
+    "ast_hash": "40212b2f6eaa8ad8d44989d6df82661c",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\sections\\FeaturedProducts.jsx": {
+    "mtime": 1779884695.4849656,
+    "ast_hash": "4cb1e1822b4376beedcb0c41ea5f177c",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\sections\\Hero.jsx": {
+    "mtime": 1779953611.5916283,
+    "ast_hash": "975864f6b7395e11dfe685e923520f24",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\sections\\MarqueeSection.jsx": {
+    "mtime": 1779884695.4849656,
+    "ast_hash": "4ab59ac719560c812c9d27cdf1e7b31a",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\sections\\RentalProcess.jsx": {
+    "mtime": 1779952205.9186978,
+    "ast_hash": "06743f2a45aac4542521a21d2c24d3fc",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\sections\\TestimonialSection.jsx": {
+    "mtime": 1779885925.079872,
+    "ast_hash": "3f20fb60062fe4323466a0445463893a",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\sections\\VideoSection.jsx": {
+    "mtime": 1779884695.4849656,
+    "ast_hash": "a4eeaf053c34bdb177419814d1d831a7",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\seo\\schemas.js": {
+    "mtime": 1779884695.4849656,
+    "ast_hash": "e981561ace78f7e139e313e1e3b98959",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\seo\\SEO.jsx": {
+    "mtime": 1779884695.4849656,
+    "ast_hash": "ec3b59f479cf687ea44d09be631ea229",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\store\\useAuth.js": {
+    "mtime": 1779911632.262527,
+    "ast_hash": "e44fae1b3a64b184e4742391a3acacf2",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\store\\useStore.js": {
+    "mtime": 1779996768.1520326,
+    "ast_hash": "02a5811221726960a20f99f74de59c5a",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\utils\\api.js": {
+    "mtime": 1780258655.1156375,
+    "ast_hash": "2c32ab9342b1c309194aa0a24e3104cf",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\utils\\categories.js": {
+    "mtime": 1779884695.4849656,
+    "ast_hash": "8393062515fa3e6dbde1a60b66a56555",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\utils\\constants.js": {
+    "mtime": 1779915567.999854,
+    "ast_hash": "7efb3f0fa12690b2118731b427acd784",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\utils\\helpers.js": {
+    "mtime": 1779884695.4849656,
+    "ast_hash": "f2bff00d49f253f16578ea107adcf96b",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\index.html": {
+    "mtime": 1780089266.657969,
+    "ast_hash": "67e91ebcb9cf13186cf8e297be803249",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\ORDER_DETAILS_PAGE_UPDATE.md": {
+    "mtime": 1780042365.9074128,
+    "ast_hash": "999f09b53633f320df99e0a327a347de",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\README.md": {
+    "mtime": 1779884695.3159225,
+    "ast_hash": "abfa161e3e5434e3e85394bf03d387a4",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\.github\\copilot-instructions.md": {
+    "mtime": 1780254984.882545,
+    "ast_hash": "2b23503628bf2ec71d067a85ca8948ab",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\robots.txt": {
+    "mtime": 1780120822.174316,
+    "ast_hash": "fb41f018bf934bacc68dd7b00fcdcffc",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\favicon.png": {
+    "mtime": 1779906012.9107113,
+    "ast_hash": "7fff044bd5cbe27effc3a075dd25d805",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\favicon.svg": {
+    "mtime": 1779906282.7158043,
+    "ast_hash": "f8fd94a677590c63a8093ff1bef78d72",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\icons.svg": {
+    "mtime": 1779884695.3159225,
+    "ast_hash": "21c7473c592c67dc87223d49892c8f0a",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\logo-transparent.png": {
+    "mtime": 1779909376.7823067,
+    "ast_hash": "0611196e485dc22ae04d7359c3f7dcd9",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\logo-transparent.webp": {
+    "mtime": 1779916855.578,
+    "ast_hash": "473478464cd2123e4b36e64d5f55fdab",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\logo.png": {
+    "mtime": 1779884695.3159225,
+    "ast_hash": "147c20ffe72e92f27eb5b3be6d945785",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\new_transparent_logo - Copy.png": {
+    "mtime": 1779909376.7823067,
+    "ast_hash": "0611196e485dc22ae04d7359c3f7dcd9",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\placeholder-product.svg": {
+    "mtime": 1779884695.3159225,
+    "ast_hash": "28c658957e018d95371e3ce56452de0a",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\_alogo-transparent.png": {
+    "mtime": 1779906562.322867,
+    "ast_hash": "30840a58a82d27039daec31d43d5d2d1",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\banner\\banner1.png": {
+    "mtime": 1779888636.996456,
+    "ast_hash": "82cb0a25ae757d0713cd86f62cb088d5",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\banner\\banner1.webp": {
+    "mtime": 1779916855.514,
+    "ast_hash": "f7a927a096ad57daf2f75c5d03680796",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\products\\bangles-1.jpg": {
+    "mtime": 1779884695.3315494,
+    "ast_hash": "37229a73eb13c756537adcc3cf72c78a",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\products\\choker-1.jpg": {
+    "mtime": 1779884695.3315494,
+    "ast_hash": "ac39ecfff759b70c37e38e1f77f7b995",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\products\\earrings-1.jpg": {
+    "mtime": 1779884695.351325,
+    "ast_hash": "d23b7eef906c078b3f11749aeea25a18",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\products\\hathphool-1.jpg": {
+    "mtime": 1779884695.3593378,
+    "ast_hash": "11ecbfa1c5f2512ad255d0395e99654f",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\products\\lehenga-1.jpg": {
+    "mtime": 1779884695.3593378,
+    "ast_hash": "0fd048bbc031cef4ab53c3f466cf953a",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\products\\necklace-1.jpg": {
+    "mtime": 1779884695.3755786,
+    "ast_hash": "21e9191cb2f08a0e69d6e71192cd418b",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\products\\ranihaar-1.jpg": {
+    "mtime": 1779884695.3755786,
+    "ast_hash": "cb98500fce1b958ea4da894c3b59feeb",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\public\\products\\tikka-1.jpg": {
+    "mtime": 1779884695.3912206,
+    "ast_hash": "e64f4d7509bcedac8821da189dbe64ef",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\hero.png": {
+    "mtime": 1779884695.3912206,
+    "ast_hash": "aead493361b27e7510691c5d7072dfc1",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\vite.svg": {
+    "mtime": 1779884695.4380958,
+    "ast_hash": "6d5180a782d64c8cf51ba01c2a2184d8",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\bridal-hero.png": {
+    "mtime": 1779884695.4068418,
+    "ast_hash": "d805a6750fd2ac36dda9359efaee19c4",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\bridal-hero.webp": {
+    "mtime": 1779916853.958,
+    "ast_hash": "9aa80479a2663f243efbce89d7300129",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\collection-temple.png": {
+    "mtime": 1779884695.4068418,
+    "ast_hash": "a156900bdb7b629440c530fa6d3e77cf",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\collection-temple.webp": {
+    "mtime": 1779916854.265,
+    "ast_hash": "d4d13027f9e7dd65254e58929c4bc7ef",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\craftsmanship.png": {
+    "mtime": 1779884695.422466,
+    "ast_hash": "d3ae0824cd1d2edd017c3e25752cb69b",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\craftsmanship.webp": {
+    "mtime": 1779916854.481,
+    "ast_hash": "268b0b30710e4e366c56f8e9cf5bb3b9",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\hero-necklace.png": {
+    "mtime": 1779884695.422466,
+    "ast_hash": "0fd39f7fcf9ec0b15faf05111d35b142",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\hero-necklace.webp": {
+    "mtime": 1779916854.713,
+    "ast_hash": "9e85d6810b7fac23538e37e7a27f7db0",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\product-choker.png": {
+    "mtime": 1779884695.422466,
+    "ast_hash": "ac39ecfff759b70c37e38e1f77f7b995",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\product-choker.webp": {
+    "mtime": 1779916854.947,
+    "ast_hash": "ac4244680f1e8fa0abfe91f3252c8fc5",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\product-jhumka.png": {
+    "mtime": 1779884695.4380958,
+    "ast_hash": "d23b7eef906c078b3f11749aeea25a18",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\assets\\images\\product-jhumka.webp": {
+    "mtime": 1779916855.233,
+    "ast_hash": "61eba9c658fdb46829c8cc8183d1c5c8",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\ComparisonBar.jsx": {
+    "mtime": 1780255951.7551568,
+    "ast_hash": "8367daa867b08ade9db97a0452adc38a",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\components\\ui\\ComparisonButton.jsx": {
+    "mtime": 1780258682.5349157,
+    "ast_hash": "deb77c6807aa99e052818ebb69063b3f",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\pages\\Compare.jsx": {
+    "mtime": 1780258673.8233151,
+    "ast_hash": "67899a385e8bce3d232ba94447221de0",
+    "semantic_hash": ""
+  },
+  "C:\\xampp\\htdocs\\ss\\client\\src\\store\\useComparisonStore.js": {
+    "mtime": 1780258663.9494653,
+    "ast_hash": "9bd28ebb50c4f91df8b27b83d59f8b5e",
+    "semantic_hash": ""
+  }
+}

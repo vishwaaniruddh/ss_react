@@ -6,6 +6,7 @@ import MainLayout from '@/layouts/MainLayout'
 const Home = lazy(() => import('@/pages/Home'))
 const Shop = lazy(() => import('@/pages/Shop'))
 const ProductDetails = lazy(() => import('@/pages/ProductDetails'))
+const Compare = lazy(() => import('@/pages/Compare'))
 const BridalCollections = lazy(() => import('@/pages/BridalCollections'))
 const JewelleryCollections = lazy(() => import('@/pages/JewelleryCollections'))
 const About = lazy(() => import('@/pages/About'))
@@ -19,6 +20,7 @@ const Cart = lazy(() => import('@/pages/Cart'))
 const Checkout = lazy(() => import('@/pages/Checkout'))
 const Auth = lazy(() => import('@/pages/Auth'))
 const Account = lazy(() => import('@/pages/Account'))
+const OrderDetails = lazy(() => import('@/pages/OrderDetails'))
 const Testimonials = lazy(() => import('@/pages/Testimonials'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -57,6 +59,7 @@ export const router = createBrowserRouter([
       { index: true, element: <SuspenseWrapper><Home /></SuspenseWrapper> },
       { path: 'shop', element: <SuspenseWrapper><Shop /></SuspenseWrapper> },
       { path: 'product/:slug', element: <SuspenseWrapper><ProductDetails /></SuspenseWrapper> },
+      { path: 'compare', element: <SuspenseWrapper><Compare /></SuspenseWrapper> },
       { path: 'bridal', element: <SuspenseWrapper><BridalCollections /></SuspenseWrapper> },
       { path: 'bridal/:slug', element: <SuspenseWrapper><BridalCollections /></SuspenseWrapper> },
       { path: 'jewellery', element: <SuspenseWrapper><JewelleryCollections /></SuspenseWrapper> },
@@ -77,6 +80,8 @@ export const router = createBrowserRouter([
       { path: 'register', element: <SuspenseWrapper><Auth /></SuspenseWrapper> },
       { path: 'auth', element: <SuspenseWrapper><Auth /></SuspenseWrapper> },
       { path: 'account', element: <SuspenseWrapper><Account /></SuspenseWrapper> },
+      { path: 'account/orders', element: <SuspenseWrapper><Account /></SuspenseWrapper> },
+      { path: 'account/orders/:orderId', element: <SuspenseWrapper><OrderDetails /></SuspenseWrapper> },
       { path: '*', element: <SuspenseWrapper><NotFound /></SuspenseWrapper> },
     ],
   },

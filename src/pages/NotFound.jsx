@@ -1,9 +1,26 @@
 import { Link } from 'react-router-dom'
 import { Home, ArrowLeft, Search } from 'lucide-react'
+import { useEffect } from 'react'
 import SEO from '@/seo/SEO'
 import Button from '@/components/ui/Button'
 
 export default function NotFound() {
+  // Set proper HTTP status code for 404
+  useEffect(() => {
+    // Add meta tag for server-side rendering or crawlers
+    const meta = document.createElement('meta')
+    meta.name = 'prerender-status-code'
+    meta.content = '404'
+    document.head.appendChild(meta)
+    
+    // Set document title for crawlers
+    document.title = '404 - Page Not Found — Sri Shringaar'
+    
+    return () => {
+      document.head.removeChild(meta)
+    }
+  }, [])
+
   return (
     <>
       <SEO title="Page Not Found — Sri Shringaar" description="The page you're looking for doesn't exist." />

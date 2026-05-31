@@ -222,7 +222,11 @@ export async function getProductDetail({ id, type, signal } = {}) {
     signal,
   })
   if (!body?.data) return null
-  return normalizeApiProduct(body.data)
+  const normalized = normalizeApiProduct(body.data)
+  if (normalized) {
+    normalized.isFullDetails = true
+  }
+  return normalized
 }
 
 /**

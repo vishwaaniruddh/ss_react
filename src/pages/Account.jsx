@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
-  User, Package, MapPin, LogOut, ChevronRight, Calendar, Tag,
+  User, Package, MapPin, LogOut, ChevronRight, Calendar, Tag, Eye,
 } from 'lucide-react'
 import SEO from '@/seo/SEO'
 import SplitText from '@/components/ui/SplitText'
@@ -20,17 +20,38 @@ const tabs = [
 export default function Account() {
   const { user, isLoggedIn, logout, updateProfile } = useAuth()
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState('profile')
+  const location = useLocation()
+  
+  // Determine active tab from URL
+  const getActiveTabFromPath = () => {
+    if (location.pathname.includes('/orders')) return 'orders'
+    return 'profile'
+  }
+  
+  const [activeTab, setActiveTab] = useState(getActiveTabFromPath())
 
   useEffect(() => {
     if (!isLoggedIn) navigate('/login', { replace: true })
   }, [isLoggedIn, navigate])
+
+  useEffect(() => {
+    setActiveTab(getActiveTabFromPath())
+  }, [location.pathname])
 
   if (!isLoggedIn || !user) return null
 
   const handleLogout = async () => {
     await logout()
     navigate('/')
+  }
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId)
+    if (tabId === 'orders') {
+      navigate('/account/orders')
+    } else {
+      navigate('/account')
+    }
   }
 
   return (
@@ -58,7 +79,7 @@ export default function Account() {
                   return (
                     <button
                       key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
+                      onClick={() => handleTabChange(tab.id)}
                       className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 cursor-pointer mb-1"
                       style={{
                         fontFamily: 'var(--font-sans)',
@@ -167,6 +188,7 @@ function ProfileTab({ user, updateProfile }) {
 
 /* ─── Orders Tab ──────────────────────────────────────────────────────── */
 function OrdersTab() {
+  const navigate = useNavigate()
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [expandedOrder, setExpandedOrder] = useState(null)
@@ -207,10 +229,7 @@ function OrdersTab() {
         return (
           <div key={order.id} className="rounded-xl overflow-hidden" style={{ background: 'var(--color-charcoal)', border: '1px solid rgba(201,169,110,0.1)' }}>
             {/* Order header — clickable */}
-            <button
-              onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
-              className="w-full p-5 lg:p-6 flex items-center justify-between flex-wrap gap-3 cursor-pointer text-left"
-            >
+            <div className="w-full p-5 lg:p-6 flex items-center justify-between flex-wrap gap-3">
               <div>
                 <p className="text-xs tracking-[0.15em] uppercase font-semibold" style={{ color: 'var(--color-gold)' }}>
                   {order.orderNumber}
@@ -234,12 +253,30 @@ function OrdersTab() {
                 <span className="text-lg font-semibold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-gold)' }}>
                   {formatPrice(order.total)}
                 </span>
-                <ChevronRight
-                  size={16}
-                  style={{ color: 'var(--color-ivory-muted)', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
-                />
+                <button
+                  onClick={() => navigate(`/account/orders/${order.id}`)}
+                  className="p-2 rounded-lg transition-all duration-200 cursor-pointer"
+                  style={{ 
+                    background: 'rgba(201,169,110,0.1)', 
+                    color: 'var(--color-gold)',
+                    border: '1px solid rgba(201,169,110,0.2)'
+                  }}
+                  title="View Details"
+                >
+                  <Eye size={16} />
+                </button>
+                <button
+                  onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
+                  className="p-2 cursor-pointer"
+                  style={{ color: 'var(--color-ivory-muted)' }}
+                >
+                  <ChevronRight
+                    size={16}
+                    style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                  />
+                </button>
               </div>
-            </button>
+            </div>
 
             {/* Expanded details */}
             {isExpanded && (
@@ -259,7 +296,7 @@ function OrdersTab() {
                   <div>
                     <p className="text-[10px] tracking-[0.15em] uppercase mb-1" style={{ color: 'var(--color-gold)' }}>Payment</p>
                     <p className="text-xs" style={{ color: 'var(--color-ivory-muted)' }}>
-                      Razorpay ID: {order.razorpayPaymentId || '—'}
+                      Transaction ID: {order.razorpayPaymentId || '—'}
                     </p>
                     <p className="text-xs mt-0.5" style={{ color: 'var(--color-ivory-muted)' }}>
                       Order ID: {order.razorpayOrderId || '—'}
@@ -271,7 +308,19 @@ function OrdersTab() {
                 <p className="text-[10px] tracking-[0.15em] uppercase mb-2 mt-2" style={{ color: 'var(--color-gold)' }}>Items</p>
                 <div className="flex flex-col gap-2">
                   {order.items.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between py-3 px-4 rounded-lg" style={{ background: 'rgba(10,10,10,0.3)' }}>
+                    <div key={item.id} className="flex items-center gap-3 py-3 px-4 rounded-lg" style={{ background: 'rgba(10,10,10,0.3)' }}>
+                      {/* Product Image */}
+                      {item.image && (
+                        <div className="flex-shrink-0">
+                          <img 
+                            src={item.image} 
+                            alt={item.name}
+                            className="w-16 h-20 object-cover rounded border"
+                            style={{ borderColor: 'rgba(201,169,110,0.2)' }}
+                          />
+                        </div>
+                      )}
+                      
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium" style={{ color: 'var(--color-ivory)' }}>{item.name}</p>
                         <div className="flex items-center gap-3 mt-1 flex-wrap">
@@ -281,11 +330,11 @@ function OrdersTab() {
                           <span
                             className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded"
                             style={{
-                              background: item.bookingType === 'buy' ? 'rgba(93,26,27,0.3)' : 'rgba(201,169,110,0.15)',
-                              color: item.bookingType === 'buy' ? 'var(--color-ivory)' : 'var(--color-gold)',
+                              background: (item.bookingType === 'buy' || item.bookingType === 'purchase' || !item.bookingType || item.bookingType === '') ? 'rgba(93,26,27,0.3)' : 'rgba(201,169,110,0.15)',
+                              color: (item.bookingType === 'buy' || item.bookingType === 'purchase' || !item.bookingType || item.bookingType === '') ? 'var(--color-ivory)' : 'var(--color-gold)',
                             }}
                           >
-                            {item.bookingType === 'buy' ? 'Purchase' : `Rent · ${item.days} days`}
+                            {(item.bookingType === 'buy' || item.bookingType === 'purchase' || !item.bookingType || item.bookingType === '') ? 'Purchase' : `Rent · ${item.days} days`}
                           </span>
                           {item.startDate && (
                             <span className="text-[10px]" style={{ color: 'var(--color-ivory-muted)' }}>
@@ -297,20 +346,57 @@ function OrdersTab() {
                           </span>
                         </div>
                       </div>
-                      <span className="text-sm font-semibold ml-4" style={{ color: 'var(--color-ivory)' }}>
+                      <span className="text-sm font-semibold ml-4 flex-shrink-0" style={{ color: 'var(--color-ivory)' }}>
                         {formatPrice(item.total)}
                       </span>
                     </div>
                   ))}
                 </div>
 
-                {/* Total summary */}
-                <div className="flex justify-end mt-4 pt-3" style={{ borderTop: '1px solid rgba(201,169,110,0.1)' }}>
-                  <div className="text-right">
-                    <p className="text-[10px] tracking-[0.15em] uppercase" style={{ color: 'var(--color-ivory-muted)' }}>Total Paid</p>
-                    <p className="text-xl font-semibold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-gold)' }}>
+                {/* Order breakdown */}
+                <div className="mt-4 pt-3 space-y-2" style={{ borderTop: '1px solid rgba(201,169,110,0.1)' }}>
+                  <div className="flex justify-between text-sm">
+                    <span style={{ color: 'var(--color-ivory-muted)' }}>Items Subtotal</span>
+                    <span style={{ color: 'var(--color-ivory)' }}>
+                      {formatPrice(order.items.reduce((sum, item) => sum + item.total, 0))}
+                    </span>
+                  </div>
+                  
+                  {order.depositAmount > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span style={{ color: 'var(--color-ivory-muted)' }}>Refundable Deposit</span>
+                      <span style={{ color: 'var(--color-ivory)' }}>
+                        {formatPrice(order.depositAmount)}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {order.shippingCharge > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span style={{ color: 'var(--color-ivory-muted)' }}>Shipping Charge</span>
+                      <span style={{ color: 'var(--color-ivory)' }}>
+                        {formatPrice(order.shippingCharge)}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {order.couponCode && order.discountAmount > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="flex items-center gap-1.5" style={{ color: '#22c55e' }}>
+                        <Tag size={12} />
+                        Coupon ({order.couponCode})
+                      </span>
+                      <span style={{ color: '#22c55e' }}>
+                        − {formatPrice(order.discountAmount)}
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-between items-baseline pt-2" style={{ borderTop: '1px solid rgba(201,169,110,0.08)' }}>
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-ivory)' }}>Total Paid</span>
+                    <span className="text-xl font-semibold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-gold)' }}>
                       {formatPrice(order.total)}
-                    </p>
+                    </span>
                   </div>
                 </div>
               </div>

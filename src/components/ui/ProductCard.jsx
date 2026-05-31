@@ -6,6 +6,7 @@ import useStore from '@/store/useStore'
 import { formatPrice, productUrl } from '@/utils/helpers'
 import { cardHover, imageZoom } from '@/animations/variants'
 import ProductImage, { PRODUCT_PLACEHOLDER } from '@/components/ui/ProductImage'
+import ComparisonButton from '@/components/ui/ComparisonButton'
 
 /**
  * ProductCard
@@ -135,6 +136,23 @@ export default function ProductCard({ product, onImageInvalid }) {
             />
           </motion.div>
 
+          {/* Action buttons overlay */}
+          <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
+            <button
+              onClick={handleWishlistClick}
+              className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300"
+              style={{
+                background: wishlisted ? 'var(--color-gold)' : 'rgba(10, 10, 10, 0.6)',
+                border: wishlisted ? '1px solid var(--color-gold)' : '1px solid rgba(201, 169, 110, 0.3)',
+                color: wishlisted ? 'var(--color-obsidian)' : 'var(--color-ivory)',
+              }}
+              aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+            >
+              <Heart size={16} fill={wishlisted ? 'currentColor' : 'none'} />
+            </button>
+            <ComparisonButton product={product} variant="icon" size="md" />
+          </div>
+
           {/* "View Details" affordance on hover — replaces the old quick-view
             * + add-to-bag pair. Pointer-events disabled so it doesn't block
             * the underlying link click. */}
@@ -155,30 +173,6 @@ export default function ProductCard({ product, onImageInvalid }) {
               View Details <ArrowUpRight size={14} strokeWidth={2} />
             </span>
           </div>
-
-          {/* Wishlist button — only foreground action that intercepts the
-            * card link. */}
-          <motion.button
-            type="button"
-            onClick={handleWishlistClick}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 z-10"
-            style={{
-              background: wishlisted ? 'var(--color-gold)' : 'rgba(10, 10, 10, 0.4)',
-              backdropFilter: 'blur(10px)',
-            }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.85 }}
-            aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-            aria-pressed={wishlisted}
-            id={`product-${product.id}-wishlist`}
-          >
-            <Heart
-              size={16}
-              strokeWidth={wishlisted ? 0 : 1.5}
-              fill={wishlisted ? 'var(--color-obsidian)' : 'none'}
-              style={{ color: wishlisted ? 'var(--color-obsidian)' : 'var(--color-ivory)' }}
-            />
-          </motion.button>
 
           {/* Badges */}
           <div className="absolute top-4 left-4 flex flex-col gap-2">

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Trash2, ShoppingBag, ArrowRight, CalendarRange, Edit3, Shield, Truck, Tag, X,
@@ -32,14 +32,57 @@ function calculateTotals(cart) {
 export default function Cart() {
   const { cart, removeFromCart, coupon, applyCoupon, removeCoupon } = useStore()
   const { rentSubtotal, depositTotal } = calculateTotals(cart)
-  const shipping = rentSubtotal > 50000 ? 0 : 0 // Rentals: complimentary doorstep delivery
   const discount = coupon?.discount || 0
-  const total = Math.max(0, rentSubtotal + depositTotal + shipping - discount)
+  
+  // Shipping state
+  const [shippingCharge, setShippingCharge] = useState(0)
+  const [shippingInfo, setShippingInfo] = useState(null)
+  const [loadingShipping, setLoadingShipping] = useState(false)
+  
+  const total = Math.max(0, rentSubtotal + depositTotal + shippingCharge - discount)
 
   // Coupon input state
   const [couponInput, setCouponInput] = useState('')
   const [couponError, setCouponError] = useState('')
   const [applyingCoupon, setApplyingCoupon] = useState(false)
+
+  // Fetch shipping charges when cart total changes
+  useEffect(() => {
+    const fetchShippingCharge = async () => {
+      const cartTotal = rentSubtotal + depositTotal
+      
+      if (cartTotal <= 0) {
+        setShippingCharge(0)
+        setShippingInfo(null)
+        return
+      }
+
+      setLoadingShipping(true)
+      try {
+        const res = await fetch(`${API_BASE_URL}/calculate-shipping.php?cart_total=${cartTotal}`, {
+          method: 'GET',
+          credentials: 'include',
+        })
+        const data = await res.json()
+        
+        if (data.success) {
+          setShippingCharge(data.data.shipping_charge || 0)
+          setShippingInfo(data.data.free_shipping_info)
+        } else {
+          setShippingCharge(0)
+          setShippingInfo(null)
+        }
+      } catch (error) {
+        console.error('Failed to fetch shipping charge:', error)
+        setShippingCharge(0)
+        setShippingInfo(null)
+      } finally {
+        setLoadingShipping(false)
+      }
+    }
+
+    fetchShippingCharge()
+  }, [rentSubtotal, depositTotal])
 
   const handleApplyCoupon = async () => {
     if (!couponInput.trim()) {
@@ -363,7 +406,13 @@ export default function Cart() {
                     )}
                     <div className="flex justify-between body-sm">
                       <span style={{ color: 'var(--color-ivory-muted)' }}>Shipping</span>
-                      <span style={{ color: 'var(--color-gold)' }}>Complimentary</span>
+                      {loadingShipping ? (
+                        <span style={{ color: 'var(--color-ivory-muted)' }}>Calculating...</span>
+                      ) : (
+                        <span style={{ color: 'var(--color-ivory)' }}>
+                          {formatPrice(shippingCharge)}
+                        </span>
+                      )}
                     </div>
 
                     {/* Coupon section */}

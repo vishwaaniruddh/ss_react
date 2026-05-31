@@ -34,6 +34,10 @@ export default function Checkout() {
   const [error, setError] = useState('')
   const [orderId, setOrderId] = useState(null)
 
+  // Shipping charge state
+  const [shippingCharge, setShippingCharge] = useState(0)
+  const [loadingShipping, setLoadingShipping] = useState(false)
+
   // State/City dropdowns
   const [states, setStates] = useState([])
   const [cities, setCities] = useState([])
@@ -111,7 +115,41 @@ export default function Checkout() {
   const subtotal = getCartTotal()
   const depositTotal = cart.reduce((acc, item) => acc + (item.rental?.deposit || 0) * item.quantity, 0)
   const discount = coupon?.discount || 0
-  const total = Math.max(0, subtotal + depositTotal - discount)
+  const total = Math.max(0, subtotal + depositTotal + shippingCharge - discount)
+
+  // Fetch shipping charges when cart total changes
+  useEffect(() => {
+    const fetchShippingCharge = async () => {
+      const cartTotal = subtotal + depositTotal
+      
+      if (cartTotal <= 0) {
+        setShippingCharge(0)
+        return
+      }
+
+      setLoadingShipping(true)
+      try {
+        const res = await fetch(`${API_BASE_URL}/calculate-shipping.php?cart_total=${cartTotal}`, {
+          method: 'GET',
+          credentials: 'include',
+        })
+        const data = await res.json()
+        
+        if (data.success) {
+          setShippingCharge(data.data.shipping_charge || 0)
+        } else {
+          setShippingCharge(0)
+        }
+      } catch (error) {
+        console.error('Failed to fetch shipping charge:', error)
+        setShippingCharge(0)
+      } finally {
+        setLoadingShipping(false)
+      }
+    }
+
+    fetchShippingCharge()
+  }, [subtotal, depositTotal])
 
   const handleInputChange = (e) => {
     setShipping({ ...shipping, [e.target.name]: e.target.value })
@@ -237,6 +275,8 @@ export default function Checkout() {
                   } : null,
                 })),
                 couponCode: coupon?.code || null,
+                shippingCharge: shippingCharge,
+                discountAmount: discount,
               }),
             })
             const verifyData = await verifyRes.json()
@@ -403,8 +443,12 @@ export default function Checkout() {
                       </div>
                     )}
                     <div className="flex justify-between">
-                      <span style={{ color: 'var(--color-gold)' }}>Shipping</span>
-                      <span style={{ color: 'var(--color-gold)' }}>Free</span>
+                      <span style={{ color: 'var(--color-ivory-muted)' }}>Shipping</span>
+                      {loadingShipping ? (
+                        <span style={{ color: 'var(--color-ivory-muted)' }}>Calculating...</span>
+                      ) : (
+                        <span style={{ color: 'var(--color-ivory)' }}>{formatPrice(shippingCharge)}</span>
+                      )}
                     </div>
                     {discount > 0 && (
                       <div className="flex justify-between">

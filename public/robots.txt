@@ -1,4 +1,15 @@
 User-agent: *
 Allow: /
 
+# Block private / no-SEO-value pages
+Disallow: /auth
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /wishlist
+
+# Block old rental URLs with days parameter
+Disallow: /*?days=
+Disallow: /*&days=
+
 Sitemap: https://srishringarr.com/sitemap.xml
