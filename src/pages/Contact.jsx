@@ -20,7 +20,7 @@ const PHONES = [
   { display: '+91 74004 13163', tel: '+917400413163' },
 ]
 
-const EMAIL = 'hello@srishringarr.com'
+const EMAIL = 'support@srishringarr.com'
 
 const SUBJECTS = [
   'Bridal Consultation',

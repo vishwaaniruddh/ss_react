@@ -1,5 +1,26 @@
 <?php
-include_once('./API/config.php');
+// Find config.php
+$configPaths = [
+    __DIR__ . '/../../API/config.php',
+    __DIR__ . '/../API/config.php',
+    dirname(dirname(__DIR__)) . '/API/config.php',
+    './API/config.php',
+];
+
+$configLoaded = false;
+foreach ($configPaths as $configPath) {
+    if (file_exists($configPath)) {
+        require_once $configPath;
+        $configLoaded = true;
+        break;
+    }
+}
+
+if (!$configLoaded) {
+    header('HTTP/1.1 500 Internal Server Error');
+    die('Configuration file not found. Please verify backend setup.');
+}
+
 // Get the slug from query string
 $slug = $_GET['slug'] ?? '';
 

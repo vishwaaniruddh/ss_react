@@ -10,16 +10,6 @@ import ComparisonBar from '@/components/ui/ComparisonBar'
 export default function MainLayout() {
   const location = useLocation()
 
-  useEffect(() => {
-    // Perform a tiny scroll to trigger ScrollTrigger, Lenis, or other window resize/scroll recalculations
-    const timer = setTimeout(() => {
-      window.scrollBy(0, 1)
-      window.scrollBy(0, -1)
-    }, 100)
-    
-    return () => clearTimeout(timer)
-  }, [location.pathname])
-
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />

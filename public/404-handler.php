@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 /**
  * 404 Handler for SPA
  * This file checks if a route should return 404 status
@@ -52,5 +56,20 @@ if (!$isValidRoute) {
 }
 
 // Serve the React app
-readfile(__DIR__ . '/index.html');
+$indexPath = __DIR__ . '/index.html';
+if (!file_exists($indexPath)) {
+    die("Error: index.html does not exist in directory " . __DIR__ . ". Please ensure you have run 'npm run build' and uploaded the built files.");
+}
+if (!is_readable($indexPath)) {
+    die("Error: index.html is not readable in " . __DIR__ . ". Please check file permissions. Current permissions: " . substr(sprintf('%o', fileperms($indexPath)), -4));
+}
+
+try {
+    $result = readfile($indexPath);
+    if ($result === false) {
+        throw new Exception("readfile() returned false");
+    }
+} catch (Exception $e) {
+    die("Error reading index.html: " . $e->getMessage());
+}
 ?>

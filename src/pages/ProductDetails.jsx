@@ -78,10 +78,18 @@ export default function ProductDetails() {
   const { addToCart, toggleWishlist, isInWishlist } = useStore()
   const showToast = useStore((s) => s.showToast)
 
-  // Reset thumbnail selection when the underlying product changes
+  // Reset thumbnail selection and default order mode when the underlying product changes
   useEffect(() => {
     setActiveImage(0)
-  }, [product?.id])
+    if (product) {
+      const avail = product.availability || 'both'
+      if (avail === 'sell') {
+        setOrderMode('buy')
+      } else {
+        setOrderMode('rent')
+      }
+    }
+  }, [product?.id, product?.availability])
 
   // Track product view
   useEffect(() => {
@@ -115,6 +123,7 @@ export default function ProductDetails() {
   const galleryImages = product.images?.length ? product.images : [PRODUCT_PLACEHOLDER]
   const primaryImage = galleryImages[0]
   const wishlisted = isInWishlist(product.id)
+  const availability = product.availability || 'both'
 
   // Coarse type → display label + collection page
   const displayCategory = product.category
@@ -341,6 +350,7 @@ export default function ProductDetails() {
                 imageKey={activeImage}
                 alt={`${product.name} — ${displayCategory}`}
                 inStock={product.inStock}
+                availability={availability}
               />
             </motion.div>
 
@@ -351,11 +361,23 @@ export default function ProductDetails() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.15 }}
             >
-              <p className="label-text mb-3" style={{ color: 'var(--color-gold)' }}>
-                {displayCategory}
+              <p className="label-text mb-3 flex items-center flex-wrap gap-2" style={{ color: 'var(--color-gold)' }}>
+                <span>{displayCategory}</span>
                 {product.code && (
-                  <span className="ml-2" style={{ color: 'var(--color-ivory-muted)' }}>
+                  <span style={{ color: 'var(--color-ivory-muted)' }}>
                     · {product.code}
+                  </span>
+                )}
+                {product.brand_name && (
+                  <span 
+                    className="px-2.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wider border"
+                    style={{ 
+                      background: 'rgba(201, 169, 110, 0.1)', 
+                      borderColor: 'rgba(201, 169, 110, 0.3)', 
+                      color: 'var(--color-gold)' 
+                    }}
+                  >
+                    {product.brand_name}
                   </span>
                 )}
               </p>
@@ -387,10 +409,10 @@ export default function ProductDetails() {
                   className="text-3xl font-semibold"
                   style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-gold)' }}
                 >
-                  {formatPrice(rentTotalValue)}
+                  {formatPrice(orderMode === 'buy' ? (product.salePrice ?? product.mrp ?? product.price) : rentTotalValue)}
                 </span>
                 <span className="text-sm" style={{ color: 'var(--color-ivory-muted)' }}>
-                  / {actualDays} {actualDays === 1 ? 'day' : 'days'} rental
+                  {orderMode === 'buy' ? ' Purchase Price' : `/ ${actualDays} ${actualDays === 1 ? 'day' : 'days'} rental`}
                 </span>
               </div>
               <p className="text-xs mb-3" style={{ color: 'var(--color-ivory-muted)' }}>
@@ -411,34 +433,36 @@ export default function ProductDetails() {
               <div className="luxury-divider mb-8 mt-6" style={{ opacity: 0.15 }} />
 
               {/* Rent / Buy mode toggle */}
-              <div className="flex gap-2 mb-6">
-                <button
-                  type="button"
-                  onClick={() => setOrderMode('rent')}
-                  className="flex-1 py-3 rounded-lg text-xs tracking-[0.1em] uppercase font-medium transition-all duration-300 cursor-pointer"
-                  style={{
-                    fontFamily: 'var(--font-sans)',
-                    background: orderMode === 'rent' ? 'var(--color-gold)' : 'transparent',
-                    color: orderMode === 'rent' ? 'var(--color-obsidian)' : 'var(--color-ivory-muted)',
-                    border: `1px solid ${orderMode === 'rent' ? 'var(--color-gold)' : 'rgba(201, 169, 110, 0.2)'}`,
-                  }}
-                >
-                  Rent
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setOrderMode('buy')}
-                  className="flex-1 py-3 rounded-lg text-xs tracking-[0.1em] uppercase font-medium transition-all duration-300 cursor-pointer"
-                  style={{
-                    fontFamily: 'var(--font-sans)',
-                    background: orderMode === 'buy' ? 'var(--color-gold)' : 'transparent',
-                    color: orderMode === 'buy' ? 'var(--color-obsidian)' : 'var(--color-ivory-muted)',
-                    border: `1px solid ${orderMode === 'buy' ? 'var(--color-gold)' : 'rgba(201, 169, 110, 0.2)'}`,
-                  }}
-                >
-                  Buy
-                </button>
-              </div>
+              {availability === 'both' && (
+                <div className="flex gap-2 mb-6">
+                  <button
+                    type="button"
+                    onClick={() => setOrderMode('rent')}
+                    className="flex-1 py-3 rounded-lg text-xs tracking-[0.1em] uppercase font-medium transition-all duration-300 cursor-pointer"
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      background: orderMode === 'rent' ? 'var(--color-gold)' : 'transparent',
+                      color: orderMode === 'rent' ? 'var(--color-obsidian)' : 'var(--color-ivory-muted)',
+                      border: `1px solid ${orderMode === 'rent' ? 'var(--color-gold)' : 'rgba(201, 169, 110, 0.2)'}`,
+                    }}
+                  >
+                    Rent
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setOrderMode('buy')}
+                    className="flex-1 py-3 rounded-lg text-xs tracking-[0.1em] uppercase font-medium transition-all duration-300 cursor-pointer"
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      background: orderMode === 'buy' ? 'var(--color-gold)' : 'transparent',
+                      color: orderMode === 'buy' ? 'var(--color-obsidian)' : 'var(--color-ivory-muted)',
+                      border: `1px solid ${orderMode === 'buy' ? 'var(--color-gold)' : 'rgba(201, 169, 110, 0.2)'}`,
+                    }}
+                  >
+                    Buy
+                  </button>
+                </div>
+              )}
 
               {orderMode === 'rent' ? (
                 <>
@@ -919,7 +943,7 @@ function StockBadge({ inventory, inStock }) {
  * the mouse, then scaling the image. Touch devices skip the zoom (no hover
  * means the constant scaled state would be unusable).
  */
-function ZoomImage({ src, imageKey, alt, inStock }) {
+function ZoomImage({ src, imageKey, alt, inStock, availability }) {
   const [origin, setOrigin] = useState('50% 50%')
   const [hovering, setHovering] = useState(false)
   const [resolvedSrc, setResolvedSrc] = useState(src || PRODUCT_PLACEHOLDER)
@@ -946,7 +970,7 @@ function ZoomImage({ src, imageKey, alt, inStock }) {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl flex-1 aspect-[4/5] max-h-[640px] mx-auto w-full"
+      className="relative overflow-hidden rounded-2xl flex-1 aspect-[2/3] max-h-[640px] mx-auto w-full"
       style={{
         background: 'var(--color-charcoal)',
         maxWidth: '520px',
@@ -959,10 +983,17 @@ function ZoomImage({ src, imageKey, alt, inStock }) {
       }}
       onMouseMove={handleMove}
     >
+      {/* Blurred Background to fill empty spaces */}
+      <img
+        src={resolvedSrc}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover filter blur-md opacity-30 scale-105 pointer-events-none"
+      />
+      {/* Main Contain Image to show full product details */}
       <motion.img
         src={resolvedSrc}
         alt={alt}
-        className="w-full h-full object-cover"
+        className="relative w-full h-full object-contain z-10"
         key={imageKey}
         initial={{ opacity: 0, scale: 1.04 }}
         animate={{ opacity: 1, scale: hovering ? 2 : 1 }}
@@ -976,18 +1007,34 @@ function ZoomImage({ src, imageKey, alt, inStock }) {
         onError={handleError}
       />
 
-      <div
-        className="absolute top-4 left-4 flex items-center gap-2 pl-3 pr-3 pt-1.5 pb-1.5 rounded-full text-[0.65rem] tracking-[0.12em] uppercase pointer-events-none"
-        style={{
-          background: 'rgba(10, 10, 10, 0.7)',
-          backdropFilter: 'blur(8px)',
-          color: 'var(--color-gold)',
-          fontFamily: 'var(--font-sans)',
-          border: '1px solid rgba(201, 169, 110, 0.2)',
-        }}
-      >
-        <Sparkles size={12} /> Available for Rent
-      </div>
+      {availability !== 'sell' && (
+        <div
+          className="absolute top-4 left-4 flex items-center gap-2 pl-3 pr-3 pt-1.5 pb-1.5 rounded-full text-[0.65rem] tracking-[0.12em] uppercase pointer-events-none"
+          style={{
+            background: 'rgba(10, 10, 10, 0.7)',
+            backdropFilter: 'blur(8px)',
+            color: 'var(--color-gold)',
+            fontFamily: 'var(--font-sans)',
+            border: '1px solid rgba(201, 169, 110, 0.2)',
+          }}
+        >
+          <Sparkles size={12} /> Available for Rent
+        </div>
+      )}
+      {availability === 'sell' && (
+        <div
+          className="absolute top-4 left-4 flex items-center gap-2 pl-3 pr-3 pt-1.5 pb-1.5 rounded-full text-[0.65rem] tracking-[0.12em] uppercase pointer-events-none"
+          style={{
+            background: 'rgba(10, 10, 10, 0.7)',
+            backdropFilter: 'blur(8px)',
+            color: 'var(--color-gold)',
+            fontFamily: 'var(--font-sans)',
+            border: '1px solid rgba(201, 169, 110, 0.2)',
+          }}
+        >
+          <Sparkles size={12} /> Available for Sale
+        </div>
+      )}
 
       {!inStock && (
         <div

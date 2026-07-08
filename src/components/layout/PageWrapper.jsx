@@ -28,30 +28,19 @@ export default function PageWrapper({ children }) {
       document.body.scrollTop = 0
     }
 
-    // Defer the nudge to the next frame so the new route has mounted, then
-    // bounce back to 0 on the frame after that. The user perceives no motion
-    // but the browser is forced to reflow and any in-view observers fire.
-    const raf1 = requestAnimationFrame(() => {
+    // Defer a 2px scroll down to allow full layout mounting and hydration.
+    // Keeping a 2px offset ensures IntersectionObservers and ScrollTriggers
+    // are actively triggered on load without visible page movement.
+    const timer = setTimeout(() => {
       const l = getLenis()
-      if (l) l.scrollTo(1, { immediate: true, force: true })
-      else window.scrollTo(0, 1)
+      if (l) {
+        l.scrollTo(2, { immediate: true, force: true })
+      } else {
+        window.scrollTo(0, 2)
+      }
+    }, 200)
 
-      const raf2 = requestAnimationFrame(() => {
-        const l2 = getLenis()
-        if (l2) l2.scrollTo(0, { immediate: true, force: true })
-        else window.scrollTo(0, 0)
-      })
-
-      // Stash the inner raf id on the closure variable so we can cancel both.
-      // (using a ref-like pattern via closure capture)
-      cleanup.inner = raf2
-    })
-
-    const cleanup = { outer: raf1, inner: 0 }
-    return () => {
-      cancelAnimationFrame(cleanup.outer)
-      if (cleanup.inner) cancelAnimationFrame(cleanup.inner)
-    }
+    return () => clearTimeout(timer)
   }, [location.pathname])
 
   return (

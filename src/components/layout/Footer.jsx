@@ -245,12 +245,12 @@ export default function Footer() {
                 <span>+91 93242 43011</span>
               </a>
               <a
-                href="mailto:hello@srishringarr.com"
+                href="mailto:support@srishringarr.com"
                 className="inline-flex items-center gap-2 text-[12px] transition-colors duration-300 hover:text-gold"
                 style={{ color: 'var(--color-ivory-muted)' }}
               >
                 <Mail size={12} strokeWidth={1.5} style={{ color: 'var(--color-gold)' }} />
-                <span>hello@srishringarr.com</span>
+                <span>support@srishringarr.com</span>
               </a>
             </div>
 

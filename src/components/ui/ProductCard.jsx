@@ -124,20 +124,27 @@ export default function ProductCard({ product, onImageInvalid }) {
       >
         {/* Image container */}
         <div
-          className="relative overflow-hidden rounded-xl mb-4 aspect-[4/5]"
+          className="relative overflow-hidden rounded-xl mb-4 aspect-[2/3]"
           style={{ background: 'var(--color-charcoal)' }}
         >
-          <motion.div className="w-full h-full" variants={imageZoom}>
+          <motion.div className="w-full h-full relative" variants={imageZoom}>
+            {/* Blurred Background to fill empty spaces */}
+            <img
+              src={heroSrc}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover filter blur-md opacity-30 scale-105 pointer-events-none"
+            />
+            {/* Main Contain Image to show full product details */}
             <ProductImage
               src={heroSrc}
               alt={product.name}
-              className="w-full h-full object-cover"
+              className="relative w-full h-full object-contain z-10"
               loading="lazy"
             />
           </motion.div>
 
           {/* Action buttons overlay */}
-          <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
+          <div className="absolute top-3 right-3 flex flex-col gap-2 z-20">
             <button
               onClick={handleWishlistClick}
               className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300"
@@ -157,7 +164,7 @@ export default function ProductCard({ product, onImageInvalid }) {
             * + add-to-bag pair. Pointer-events disabled so it doesn't block
             * the underlying link click. */}
           <div
-            className="absolute inset-0 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            className="absolute inset-0 z-20 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
             style={{
               background: 'linear-gradient(transparent 40%, rgba(10, 10, 10, 0.7))',
             }}
@@ -175,7 +182,7 @@ export default function ProductCard({ product, onImageInvalid }) {
           </div>
 
           {/* Badges */}
-          <div className="absolute top-4 left-4 flex flex-col gap-2">
+          <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
             {product.isNew && (
               <span
                 className="pl-3 pr-3 pt-1 pb-1 rounded-full text-[0.6rem] font-semibold tracking-[0.15em] uppercase"
@@ -220,43 +227,47 @@ export default function ProductCard({ product, onImageInvalid }) {
         </h3>
         <div className="flex flex-col gap-1 mt-1">
           {/* Rent price (primary) */}
-          <div className="flex items-center gap-2">
-            <span
-              className="text-[0.6rem] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded"
-              style={{ background: 'rgba(201, 169, 110, 0.15)', color: 'var(--color-gold)', fontFamily: 'var(--font-sans)' }}
-            >
-              Rent
-            </span>
-            <span
-              className="text-sm font-medium"
-              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-ivory)' }}
-            >
-              {formatPrice(product.rentPrice || product.price)}
-            </span>
-          </div>
-          {/* Sale/Buy price */}
-          <div className="flex items-center gap-2">
-            <span
-              className="text-[0.6rem] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded"
-              style={{ background: 'rgba(93, 26, 27, 0.3)', color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
-            >
-              Buy
-            </span>
-            <span
-              className="text-sm font-medium"
-              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-ivory-muted)' }}
-            >
-              {formatPrice(product.price)}
-            </span>
-            {product.originalPrice && (
+          {(product.availability || 'both') !== 'sell' && (
+            <div className="flex items-center gap-2">
               <span
-                className="text-xs line-through"
-                style={{ fontFamily: 'var(--font-sans)', color: 'rgba(245, 240, 232, 0.6)' }}
+                className="text-[0.6rem] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded"
+                style={{ background: 'rgba(201, 169, 110, 0.15)', color: 'var(--color-gold)', fontFamily: 'var(--font-sans)' }}
               >
-                {formatPrice(product.originalPrice)}
+                Rent
               </span>
-            )}
-          </div>
+              <span
+                className="text-sm font-medium"
+                style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-ivory)' }}
+              >
+                {formatPrice(product.rentPrice || product.price)}
+              </span>
+            </div>
+          )}
+          {/* Sale/Buy price */}
+          {(product.availability || 'both') !== 'rent' && (
+            <div className="flex items-center gap-2">
+              <span
+                className="text-[0.6rem] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded"
+                style={{ background: 'rgba(93, 26, 27, 0.3)', color: 'var(--color-ivory-muted)', fontFamily: 'var(--font-sans)' }}
+              >
+                Buy
+              </span>
+              <span
+                className="text-sm font-medium"
+                style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-ivory-muted)' }}
+              >
+                {formatPrice(product.price)}
+              </span>
+              {product.originalPrice && (
+                <span
+                  className="text-xs line-through"
+                  style={{ fontFamily: 'var(--font-sans)', color: 'rgba(245, 240, 232, 0.6)' }}
+                >
+                  {formatPrice(product.originalPrice)}
+                </span>
+              )}
+            </div>
+          )}
         </div>
         {product.rating && (
           <div className="flex items-center gap-1 mt-2">

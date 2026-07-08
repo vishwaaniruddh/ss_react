@@ -74,17 +74,32 @@ export async function apiFetch(path, { params, signal, init } = {}) {
   }
 
   if (!response.ok) {
-    const error = new Error(`Request failed with status ${response.status}`)
+    let errorText = '';
+    try {
+      errorText = await response.clone().text();
+    } catch (_) {}
+    const error = new Error(`Request failed with status ${response.status}${errorText ? ': ' + errorText.slice(0, 500) : ''}`)
     error.status = response.status
+    error.responseText = errorText
+    throw error
+  }
+
+  let text;
+  try {
+    text = await response.clone().text();
+  } catch (err) {
+    const error = new Error('Failed to read response body')
+    error.cause = err
     throw error
   }
 
   let body
   try {
-    body = await response.json()
+    body = JSON.parse(text)
   } catch (err) {
-    const error = new Error('Response was not valid JSON')
+    const error = new Error(`Response was not valid JSON: ${text.slice(0, 500)}`)
     error.cause = err
+    error.rawResponse = text
     throw error
   }
 
@@ -160,12 +175,16 @@ export function normalizeApiProduct(raw) {
     if (!merged.includes(img)) merged.push(img)
   }
 
+  const availability = details.availability || raw.availability || 'both'
+
   return {
     id,
     name: raw.name || 'Untitled',
     code: raw.code || null,
     type: raw.type || null,
     catId: toNumber(raw.cat_id) ?? raw.cat_id ?? null,
+    availability,
+    brand_name: raw.brand_name || null,
 
     // Display pricing (drives ProductCard / listing pages)
     price: salePrice ?? mrp ?? 0,
