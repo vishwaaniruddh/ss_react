@@ -185,6 +185,7 @@ export function normalizeApiProduct(raw) {
     catId: toNumber(raw.cat_id) ?? raw.cat_id ?? null,
     availability,
     brand_name: raw.brand_name || null,
+    size_avail: raw.size_avail || null,
 
     // Display pricing (drives ProductCard / listing pages)
     price: salePrice ?? mrp ?? 0,

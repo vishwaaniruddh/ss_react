@@ -4,10 +4,14 @@ import { pageTransition } from '@/animations/variants'
 import { useEffect } from 'react'
 import { useScrollProgress } from '@/hooks/useScrollProgress'
 import { getLenis } from '@/hooks/useLenis'
+import { useAnalytics } from '@/hooks/useAnalytics'
 
 export default function PageWrapper({ children }) {
   const location = useLocation()
   const progress = useScrollProgress()
+  
+  // Initialize automatic page view tracking
+  useAnalytics()
 
   // Scroll to top on route change
   //
@@ -28,19 +32,28 @@ export default function PageWrapper({ children }) {
       document.body.scrollTop = 0
     }
 
-    // Defer a 2px scroll down to allow full layout mounting and hydration.
-    // Keeping a 2px offset ensures IntersectionObservers and ScrollTriggers
-    // are actively triggered on load without visible page movement.
-    const timer = setTimeout(() => {
+    // Defer a 1px scroll down to allow full layout mounting, transition completion, and hydration.
+    // We execute this at 700ms (after the 600ms page entry transition finishes) and 1200ms
+    // to force layout, IntersectionObservers, and ScrollTriggers to recalculate.
+    const triggerNudge = () => {
       const l = getLenis()
       if (l) {
-        l.scrollTo(2, { immediate: true, force: true })
+        l.resize()
+        l.scrollTo(1, { immediate: true, force: true })
+        window.dispatchEvent(new Event('scroll'))
       } else {
-        window.scrollTo(0, 2)
+        window.scrollTo(0, 1)
+        window.dispatchEvent(new Event('scroll'))
       }
-    }, 200)
+    }
 
-    return () => clearTimeout(timer)
+    const timer1 = setTimeout(triggerNudge, 700)
+    const timer2 = setTimeout(triggerNudge, 1200)
+
+    return () => {
+      clearTimeout(timer1)
+      clearTimeout(timer2)
+    }
   }, [location.pathname])
 
   return (

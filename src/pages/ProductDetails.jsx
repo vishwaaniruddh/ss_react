@@ -22,6 +22,8 @@ import {
 import useStore from '@/store/useStore'
 import useProduct from '@/hooks/useProduct'
 import useProducts from '@/hooks/useProducts'
+import { getLenis } from '@/hooks/useLenis'
+import { useAnalytics } from '@/hooks/useAnalytics'
 import { staggerContainer, staggerItem } from '@/animations/variants'
 
 const SITE_ORIGIN = 'https://srishringaar.com'
@@ -56,6 +58,8 @@ export default function ProductDetails() {
   const { slug } = useParams()
   const productId = parseProductSlug(slug)
   const productName = parseProductSlugName(slug)
+
+  const { trackEvent } = useAnalytics()
 
   const { product, isLoading, error, refetch } = useProduct({
     id: productId,
@@ -110,6 +114,34 @@ export default function ProductDetails() {
       }),
     }).catch(() => {}) // Fire and forget — don't block UI
   }, [product?.id, product?.name, product?.type])
+
+  // Recalculate Lenis scroll dimensions and nudge scroll to trigger layout calculations when content mounts
+  useEffect(() => {
+    if (!isLoading && product) {
+      const lenis = getLenis()
+      if (lenis) {
+        lenis.resize()
+      }
+      
+      const timer = setTimeout(() => {
+        const l = getLenis()
+        if (l) {
+          l.resize()
+          const current = window.scrollY
+          l.scrollTo(current + 1, { immediate: true, force: true })
+          requestAnimationFrame(() => {
+            l.scrollTo(current, { immediate: true, force: true })
+          })
+        } else {
+          const current = window.scrollY
+          window.scrollTo(0, current + 1)
+          window.scrollTo(0, current)
+        }
+      }, 150)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [isLoading, product?.id])
 
   /* ── Loading / error / not-found views ──────────────────────────────── */
 
@@ -221,6 +253,15 @@ export default function ProductDetails() {
       },
       1
     )
+    trackEvent('cart_add', {
+      targetId: product.id,
+      targetType: product.type,
+      metadata: {
+        orderType: 'rent',
+        duration: actualDays,
+        price: rentTotalValue
+      }
+    })
     showToast(`Reserved ${product.name} for ${actualDays} days.`, { type: 'success' })
   }
 
@@ -235,6 +276,14 @@ export default function ProductDetails() {
       },
       1
     )
+    trackEvent('cart_add', {
+      targetId: product.id,
+      targetType: product.type,
+      metadata: {
+        orderType: 'purchase',
+        price: product.salePrice ?? product.mrp ?? product.price
+      }
+    })
     showToast(`Added ${product.name} to cart for purchase.`, { type: 'success' })
   }
 
@@ -302,7 +351,7 @@ export default function ProductDetails() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-start">
             {/* Image gallery — sticky on desktop so the long pricing panel can scroll past it */}
             <motion.div
-              className="flex flex-col-reverse md:flex-row gap-4 md:sticky md:top-28"
+              className="flex flex-col-reverse md:flex-row gap-4 lg:sticky lg:top-28"
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -378,6 +427,18 @@ export default function ProductDetails() {
                     }}
                   >
                     {product.brand_name}
+                  </span>
+                )}
+                {product.size_avail && (
+                  <span 
+                    className="px-2.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wider border"
+                    style={{ 
+                      background: 'rgba(245, 240, 232, 0.05)', 
+                      borderColor: 'rgba(245, 240, 232, 0.15)', 
+                      color: 'var(--color-ivory-muted)' 
+                    }}
+                  >
+                    Size: {product.size_avail}
                   </span>
                 )}
               </p>

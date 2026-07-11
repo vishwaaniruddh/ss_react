@@ -9,6 +9,8 @@ import SEO from '@/seo/SEO'
 import { PRODUCT_SORT_OPTIONS } from '@/utils/api'
 import { BRIDAL_CATEGORIES, JEWELLERY_CATEGORIES, buildCategoryQuery } from '@/utils/categories'
 import useInfiniteProducts from '@/hooks/useInfiniteProducts'
+import { useAnalytics } from '@/hooks/useAnalytics'
+import { useEffect } from 'react'
 
 /* ────────────────────────────────────────────────────────────────────────────
  * Filter chip data
@@ -70,6 +72,31 @@ export default function Shop() {
     maxPrice: PRICE_BOUNDS.max,
     sort,
   })
+
+  // Track search queries and category views
+  const { trackEvent } = useAnalytics()
+  
+  useEffect(() => {
+    if (searchQuery && !isLoading) {
+      trackEvent('search', {
+        metadata: {
+          query: searchQuery,
+          resultsCount: totalCount || 0
+        }
+      })
+    }
+  }, [searchQuery, isLoading, totalCount, trackEvent])
+
+  useEffect(() => {
+    if (activeKey !== 'all') {
+      trackEvent('category_view', {
+        metadata: {
+          categoryKey: activeKey,
+          categoryLabel: activeChip.label
+        }
+      })
+    }
+  }, [activeKey, activeChip.label, trackEvent])
 
   const clearSearch = () => {
     const next = new URLSearchParams(searchParams)
