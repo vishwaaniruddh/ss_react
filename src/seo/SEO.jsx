@@ -25,12 +25,19 @@ export default function SEO({
   // Schema.org JSON-LD can be a single object or an array
   const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : []
 
+  const hasDaysParam = typeof window !== 'undefined' && window.location.search.includes('days=');
+
   return (
     <Helmet>
       {/* Primary Meta Tags */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
+      {hasDaysParam ? (
+        <meta name="robots" content="noindex, follow" />
+      ) : (
+        <meta name="robots" content="index, follow" />
+      )}
       {resolvedCanonical && <link rel="canonical" href={resolvedCanonical} />}
 
       {/* Open Graph / Facebook */}

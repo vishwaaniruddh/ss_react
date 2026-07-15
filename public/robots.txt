@@ -8,8 +8,6 @@ Disallow: /checkout
 Disallow: /account
 Disallow: /wishlist
 
-# Block old rental URLs with days parameter
-Disallow: /*?days=
-Disallow: /*&days=
+
 
 Sitemap: https://srishringarr.com/sitemap.xml

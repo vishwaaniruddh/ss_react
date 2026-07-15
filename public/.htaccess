@@ -82,6 +82,10 @@ DirectoryIndex index.html index.php
   RewriteCond %{QUERY_STRING} !type=
   RewriteRule ^detail\.php$ /redirect-resolver.php? [L]
   
+  # product.php?id=XXXX&type=XXXX → route to PHP resolver
+  RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$)
+  RewriteRule ^product\.php$ /redirect-resolver.php [L]
+
   # jewel_detail.php?id=XXXX&type=X&days=X → route to PHP resolver
   RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$)
   RewriteRule ^jewel_detail\.php$ /redirect-resolver.php? [L]
