@@ -26,7 +26,6 @@ export const JEWELLERY_CATEGORIES = [
   { label: 'Bangles',             slug: 'bangles',             type: 'jewel_main', id: 21 },
   { label: 'Borlas',              slug: 'borlas',              type: 'jewel_main', id: 11 },
   { label: 'Bracelet',            slug: 'bracelet',            type: 'jewel_main', id: 22 },
-  { label: 'Bridal Jewellery',    slug: 'bridal-jewellery',    type: 'jewel_main', id: 29 },
   { label: 'Damini / Mathapatti', slug: 'damini-mathapatti',   type: 'jewel_main', id: 14 },
   
   {
@@ -50,19 +49,21 @@ export const JEWELLERY_CATEGORIES = [
   { label: 'Tikka', slug: 'tikka', type: 'jewel_main', id: 63 },
 
   { label: 'Kamar Patta', slug: 'kamar-patta', type: 'jewel_main', id: 15 },
-  { label: 'Mala',        slug: 'mala',        type: 'jewel_main', id: 26 },
   {
     label: 'Necklace Sets',
     slug: 'necklace-sets',
     type: 'jewel_main',
     id: 1,
     children: [
-      { label: 'American Diamond',  slug: 'american-diamond',  type: 'jewel_sub', id: 2 },
-      { label: 'Antique',           slug: 'antique',           type: 'jewel_sub', id: 1 },
-      { label: 'Imitation',         slug: 'imitation',         type: 'jewel_sub', id: 6 },
-      { label: 'Kundan',            slug: 'kundan',            type: 'jewel_sub', id: 3 },
-      { label: 'South Indian Set',  slug: 'south-indian-set',  type: 'jewel_sub', id: 68 },
-      { label: 'Vilandi / Polki',   slug: 'vilandi-polki',     type: 'jewel_sub', id: 4 },
+      { label: 'American Diamond',      slug: 'american-diamond',      type: 'jewel_sub', id: 2 },
+      { label: 'Antique',               slug: 'antique',               type: 'jewel_sub', id: 1 },
+      { label: 'Imitation',             slug: 'imitation',             type: 'jewel_sub', id: 6 },
+      { label: 'Kundan',                slug: 'kundan',                type: 'jewel_sub', id: 3 },
+      { label: 'Long Set',              slug: 'long-set',              type: 'jewel_sub', id: 83 },
+      { label: 'Mala',                  slug: 'mala',                  type: 'jewel_sub', id: 72 },
+      { label: 'Marathi Set',           slug: 'marathi-set',           type: 'jewel_sub', id: 84 },
+      { label: 'South Indian Set',      slug: 'south-indian-set',      type: 'jewel_sub', id: 68 },
+      { label: 'Vilandi / Polki',       slug: 'vilandi-polki',         type: 'jewel_sub', id: 4 },
     ],
   },
   { label: 'Payal / Pag Pan', slug: 'payal-pag-pan', type: 'jewel_main', id: 65 },
@@ -106,6 +107,18 @@ const _byTypeId            = new Map()  // 'jewel_main:17' / 'jewel_sub:77' / 'g
         // both reuse small integers). The `type:id` key disambiguates by type.
         _byTypeId.set(`${sub.type}:${sub.id}`, { ...sub, parent: main })
       }
+    }
+  }
+
+  // Aliases for renamed categories to preserve existing bookmarks / external links
+  const legacyAliases = [
+    { oldPath: 'necklace-sets/long-necklace-sets', newPath: 'necklace-sets/long-set' },
+    { oldPath: 'necklace-sets/marathi-long-necklace', newPath: 'necklace-sets/marathi-set' },
+  ]
+  for (const alias of legacyAliases) {
+    const target = _jewelleryBySlugPath.get(alias.newPath)
+    if (target) {
+      _jewelleryBySlugPath.set(alias.oldPath, target)
     }
   }
 
