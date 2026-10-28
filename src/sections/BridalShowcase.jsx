@@ -67,6 +67,7 @@ export default function BridalShowcase() {
               alt="Indian bride in deep maroon bridal lehenga with traditional gold jewellery"
               className="w-full h-full object-cover"
               loading="lazy"
+              decoding="async"
             />
             {/* Overlay gradient */}
             <div
@@ -99,6 +100,7 @@ export default function BridalShowcase() {
                 alt="South Indian temple jewellery collection arranged on dark marble"
                 className="w-full h-full object-cover"
                 loading="lazy"
+                decoding="async"
               />
               <div
                 className="absolute inset-0"

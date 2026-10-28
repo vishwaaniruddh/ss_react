@@ -1,8 +1,32 @@
 import { useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { createMagneticEffect } from '@/animations/gsapUtils'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
+
+function attachMagneticEffect(element, strength = 0.25) {
+  if (typeof window === 'undefined' || window.matchMedia('(pointer: coarse)').matches) {
+    return () => {}
+  }
+
+  const handleMouseMove = (e) => {
+    const rect = element.getBoundingClientRect()
+    const x = (e.clientX - rect.left - rect.width / 2) * strength
+    const y = (e.clientY - rect.top - rect.height / 2) * strength
+    element.style.transform = `translate3d(${x}px, ${y}px, 0)`
+  }
+
+  const handleMouseLeave = () => {
+    element.style.transform = 'translate3d(0, 0, 0)'
+  }
+
+  element.addEventListener('mousemove', handleMouseMove, { passive: true })
+  element.addEventListener('mouseleave', handleMouseLeave, { passive: true })
+
+  return () => {
+    element.removeEventListener('mousemove', handleMouseMove)
+    element.removeEventListener('mouseleave', handleMouseLeave)
+  }
+}
 
 export default function Button({
   children,
@@ -19,7 +43,7 @@ export default function Button({
 
   useEffect(() => {
     if (magnetic && !prefersReducedMotion && ref.current) {
-      const cleanup = createMagneticEffect(ref.current, 0.25)
+      const cleanup = attachMagneticEffect(ref.current, 0.25)
       return cleanup
     }
   }, [magnetic, prefersReducedMotion])

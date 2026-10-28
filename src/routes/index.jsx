@@ -2,8 +2,10 @@ import { lazy, Suspense } from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import MainLayout from '@/layouts/MainLayout'
 
+import Home from '@/pages/Home'
+
 // Lazy-loaded pages for code splitting
-const Home = lazy(() => import('@/pages/Home'))
+const HomeV2 = lazy(() => import('@/pages/HomeV2'))
 const Shop = lazy(() => import('@/pages/Shop'))
 const ProductDetails = lazy(() => import('@/pages/ProductDetails'))
 const Compare = lazy(() => import('@/pages/Compare'))
@@ -56,7 +58,9 @@ export const router = createBrowserRouter([
     path: '/',
     element: <MainLayout />,
     children: [
-      { index: true, element: <SuspenseWrapper><Home /></SuspenseWrapper> },
+      { index: true, element: <Home /> },
+      { path: 'home-2', element: <SuspenseWrapper><HomeV2 /></SuspenseWrapper> },
+      { path: 'home-v2', element: <SuspenseWrapper><HomeV2 /></SuspenseWrapper> },
       { path: 'shop', element: <SuspenseWrapper><Shop /></SuspenseWrapper> },
       { path: 'product/:slug', element: <SuspenseWrapper><ProductDetails /></SuspenseWrapper> },
       { path: 'compare', element: <SuspenseWrapper><Compare /></SuspenseWrapper> },

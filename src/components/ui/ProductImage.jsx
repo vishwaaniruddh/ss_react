@@ -11,7 +11,7 @@ export const PRODUCT_PLACEHOLDER = '/placeholder-product.svg'
  * automatic resizing and format conversion. Only proxies URLs from
  * our own domain's upload folder.
  */
-function proxyUrl(src, width = 400) {
+export function proxyUrl(src, width = 400) {
   if (!src) return src
   const s = String(src)
   // Only proxy images from our uploads folder
@@ -85,6 +85,7 @@ export default function ProductImage({
     <img
       src={currentSrc}
       alt={alt}
+      decoding="async"
       onError={handleError}
       {...rest}
     />

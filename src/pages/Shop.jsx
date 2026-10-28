@@ -1,8 +1,6 @@
 import { useMemo, useState, useCallback } from 'react'
-import { motion } from 'framer-motion'
 import { useSearchParams } from 'react-router-dom'
 import { X } from 'lucide-react'
-import { staggerContainer, staggerItem } from '@/animations/variants'
 import ProductCard from '@/components/ui/ProductCard'
 import InfiniteScrollSentinel from '@/components/ui/InfiniteScrollSentinel'
 import SEO from '@/seo/SEO'
@@ -277,19 +275,16 @@ export default function Shop() {
 
           {!error && !isLoading && items.length > 0 && (
             <>
-              <motion.div
+              <div
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-                variants={staggerContainer}
-                initial="initial"
-                animate="animate"
                 key={`${activeKey}-${sort}-${searchQuery}`}
               >
                 {items.map((product, i) => (
-                  <motion.div key={product.id} variants={staggerItem} style={{ display: hiddenIds.has(product.id) ? 'none' : undefined }}>
+                  <div key={product.id} style={{ display: hiddenIds.has(product.id) ? 'none' : undefined }}>
                     <ProductCard product={product} index={i} onImageInvalid={handleImageInvalid} />
-                  </motion.div>
+                  </div>
                 ))}
-              </motion.div>
+              </div>
 
               {/* Skeleton tail while appending pages */}
               {isLoadingMore && (

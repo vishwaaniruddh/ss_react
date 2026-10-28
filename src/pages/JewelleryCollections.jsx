@@ -1,11 +1,9 @@
 import { useMemo, useState, useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
 import { ChevronRight as ChevronCrumb } from 'lucide-react'
 import SEO from '@/seo/SEO'
 import ProductCard from '@/components/ui/ProductCard'
 import InfiniteScrollSentinel from '@/components/ui/InfiniteScrollSentinel'
-import { staggerContainer, staggerItem } from '@/animations/variants'
 import { PRODUCT_SORT_OPTIONS } from '@/utils/api'
 import {
   JEWELLERY_CATEGORIES,
@@ -38,7 +36,16 @@ const PRICE_BOUNDS = { min: 0, max: 100000 }
 export default function JewelleryCollections() {
   const { node, isAll, missing } = useResolvedCategory()
   const [sort, setSort] = useState('sku_desc')
+  const [minPrice, setMinPrice] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
+  const [priceInput, setPriceInput] = useState({ min: '', max: '' })
+  const [color, setColor] = useState('')
   const [hiddenIds, setHiddenIds] = useState(new Set())
+
+  const applyPriceFilter = useCallback(() => {
+    setMinPrice(priceInput.min)
+    setMaxPrice(priceInput.max)
+  }, [priceInput])
 
   const handleImageInvalid = useCallback((id) => {
     setHiddenIds((prev) => {
@@ -49,6 +56,9 @@ export default function JewelleryCollections() {
   }, [])
 
   const categoryQuery = node ? buildCategoryQuery(node) : null
+
+  const parsedMinPrice = minPrice === '' ? PRICE_BOUNDS.min : Number(minPrice)
+  const parsedMaxPrice = maxPrice === '' ? PRICE_BOUNDS.max : Number(maxPrice)
 
   const {
     items,
@@ -62,8 +72,9 @@ export default function JewelleryCollections() {
   } = useInfiniteProducts({
     category: categoryQuery,
     type: 'jewellery',
-    minPrice: PRICE_BOUNDS.min,
-    maxPrice: PRICE_BOUNDS.max,
+    minPrice: parsedMinPrice,
+    maxPrice: parsedMaxPrice,
+    color,
     sort,
     enabled: !missing,
   })
@@ -158,6 +169,61 @@ export default function JewelleryCollections() {
                     ? 'Loading…'
                     : `${totalCount} ${totalCount === 1 ? 'piece' : 'pieces'}`}
                 </span>
+
+                {/* Price Filter Custom Range */}
+                <div 
+                  className="flex items-center gap-1 pl-3 pr-3 pt-2 pb-2 rounded-full" 
+                  style={{ 
+                    border: '1px solid rgba(201, 169, 110, 0.2)', 
+                    fontFamily: 'var(--font-sans)',
+                    background: 'transparent'
+                  }}
+                >
+                  <span className="text-[10px] tracking-[0.08em] uppercase" style={{ color: 'var(--color-ivory-muted)' }}>₹</span>
+                  <input 
+                    type="number" 
+                    placeholder="Min" 
+                    className="bg-transparent text-xs outline-none w-12 text-center no-spinners" 
+                    style={{ color: 'var(--color-ivory)' }}
+                    value={priceInput.min} 
+                    onChange={e => setPriceInput(p => ({ ...p, min: e.target.value }))}
+                    onBlur={applyPriceFilter}
+                    onKeyDown={e => e.key === 'Enter' && applyPriceFilter()}
+                  />
+                  <span className="text-[10px]" style={{ color: 'var(--color-ivory-muted)' }}>-</span>
+                  <input 
+                    type="number" 
+                    placeholder="Max" 
+                    className="bg-transparent text-xs outline-none w-12 text-center no-spinners" 
+                    style={{ color: 'var(--color-ivory)' }}
+                    value={priceInput.max} 
+                    onChange={e => setPriceInput(p => ({ ...p, max: e.target.value }))}
+                    onBlur={applyPriceFilter}
+                    onKeyDown={e => e.key === 'Enter' && applyPriceFilter()}
+                  />
+                </div>
+
+                {/* Color Filter */}
+                <select
+                  value={color}
+                  onChange={(e) => setColor(e.target.value)}
+                  className="text-xs tracking-[0.08em] uppercase pl-3 pr-8 pt-2 pb-2 rounded-full cursor-pointer"
+                  style={{
+                    fontFamily: 'var(--font-sans)',
+                    background: 'transparent',
+                    color: 'var(--color-ivory-muted)',
+                    border: '1px solid rgba(201, 169, 110, 0.2)',
+                    appearance: 'none',
+                  }}
+                  aria-label="Filter by Color"
+                >
+                  <option value="" style={{ background: 'var(--color-charcoal)' }}>Color: All</option>
+                  {['Red', 'Maroon', 'Pink', 'Peach', 'Gold', 'Silver', 'Blue', 'Green', 'Yellow', 'Black', 'White', 'Pastel'].map(c => (
+                    <option key={c} value={c} style={{ background: 'var(--color-charcoal)' }}>{c}</option>
+                  ))}
+                </select>
+
+                {/* Sort */}
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
@@ -251,19 +317,16 @@ export default function JewelleryCollections() {
 
           {!missing && !error && !isLoading && items.length > 0 && (
             <>
-              <motion.div
+              <div
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-                variants={staggerContainer}
-                initial="initial"
-                animate="animate"
                 key={`${node?.type}-${node?.id}-${sort}`}
               >
                 {items.map((product, i) => (
-                  <motion.div key={product.id} variants={staggerItem} style={{ display: hiddenIds.has(product.id) ? 'none' : undefined }}>
+                  <div key={product.id} style={{ display: hiddenIds.has(product.id) ? 'none' : undefined }}>
                     <ProductCard product={product} index={i} onImageInvalid={handleImageInvalid} />
-                  </motion.div>
+                  </div>
                 ))}
-              </motion.div>
+              </div>
 
               {isLoadingMore && (
                 <div

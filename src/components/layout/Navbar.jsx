@@ -254,7 +254,11 @@ export default function Navbar() {
         ref={navRef}
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
-          backgroundColor: scrolled ? 'rgba(10, 10, 10, 0.95)' : 'rgba(10, 10, 10, 1)',
+          backgroundColor: scrolled
+            ? 'rgba(10, 10, 10, 0.95)'
+            : location.pathname === '/'
+              ? 'transparent'
+              : 'rgba(10, 10, 10, 1)',
           backdropFilter: scrolled ? 'blur(12px)' : 'none',
           borderBottom: scrolled ? '1px solid rgba(201, 169, 110, 0.1)' : '1px solid transparent',
           boxShadow: scrolled ? '0 4px 24px -8px rgba(0, 0, 0, 0.3)' : 'none',
@@ -345,12 +349,7 @@ export default function Navbar() {
                             minWidth: columns.length > 1 ? `${columns.length * 200}px` : '240px',
                           }}
                         >
-                          <p
-                            className="label-text mb-5"
-                            style={{ color: 'var(--color-ivory-muted)' }}
-                          >
-                            {link.label}
-                          </p>
+
                           <div
                             className="grid gap-x-10 gap-y-1"
                             style={{

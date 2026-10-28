@@ -36,6 +36,7 @@ export default function useInfiniteProducts({
   search,
   minPrice,
   maxPrice,
+  color,
   sort = 'sku_desc',
   enabled = true,
 } = {}) {
@@ -58,7 +59,7 @@ export default function useInfiniteProducts({
     setError(null)
     setPage(1)
     seenIdsRef.current = new Set()
-  }, [category, type, search, minPrice, maxPrice, sort, enabled, refreshKey])
+  }, [category, type, search, minPrice, maxPrice, color, sort, enabled, refreshKey])
 
   // Fetcher — runs on filter change AND every page bump.
   useEffect(() => {
@@ -85,6 +86,7 @@ export default function useInfiniteProducts({
       page,
       minPrice,
       maxPrice,
+      color,
       sort,
       signal: controller.signal,
     })
@@ -125,7 +127,7 @@ export default function useInfiniteProducts({
       controller.abort()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, type, search, minPrice, maxPrice, sort, enabled, page, refreshKey])
+  }, [category, type, search, minPrice, maxPrice, color, sort, enabled, page, refreshKey])
 
   const totalPages = pagination?.total_pages || 1
   const totalCount = pagination?.total ?? items.length

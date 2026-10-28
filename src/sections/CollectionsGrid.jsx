@@ -59,6 +59,7 @@ export default function CollectionsGrid() {
                   alt={collection.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
                   loading="lazy"
+                  decoding="async"
                 />
 
                 {/* Overlay */}

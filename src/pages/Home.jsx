@@ -20,8 +20,8 @@ export default function Home() {
   return (
     <>
       <SEO
-        title="Sri Shringaar — Luxury Indian Bridal Jewellery & Heritage Apparels"
-        description="Discover exquisite handcrafted Indian bridal jewellery and heritage apparels. Celebrating 70+ years of sacred craftsmanship from the master artisans of Jaipur."
+        title="Bridal Outfits & Jewellery on Rent in Mumbai"
+        description="Sri Shringaar — Mumbai's premier fashion rental studio to rent bridal lehengas, gowns, Kundan, Polki & American Diamond jewellery."
         schema={organizationSchema()}
       />
 

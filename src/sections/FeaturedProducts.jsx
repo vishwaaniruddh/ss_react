@@ -16,8 +16,8 @@ import { ArrowRight } from 'lucide-react'
  * Bridal Jewellery, and Heritage Necklace Sets without leaving the homepage.
  */
 const RAILS = [
-  { key: 'bridal',     label: 'Bridal Wear',       type: 'garments',  category: null,        cta: '/bridal' },
-  { key: 'jewellery',  label: 'Bridal Jewellery',  type: 'jewellery', category: 'jewel_main:29', cta: '/jewellery/bridal-jewellery' },
+  { key: 'bridal',     label: 'Designer Outfits',   type: 'garments',  category: null,        cta: '/bridal' },
+  { key: 'jewellery',  label: 'Jewellery',         type: 'jewellery', category: null,        cta: '/jewellery' },
   { key: 'necklaces',  label: 'Heritage Necklaces', type: 'jewellery', category: 'jewel_main:1',  cta: '/jewellery/necklace-sets' },
 ]
 

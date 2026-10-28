@@ -49,6 +49,7 @@ function PostCard({ post, index }) {
           alt={post.caption || 'Instagram post'}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
+          decoding="async"
           referrerPolicy="no-referrer"
           onError={(e) => {
             // CDN-signed Instagram thumbnails expire — hide the broken image

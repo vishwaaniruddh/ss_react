@@ -441,6 +441,23 @@ export default function ProductDetails() {
                     Size: {product.size_avail}
                   </span>
                 )}
+                {Array.isArray(product.colors) && product.colors.length > 0 && (
+                  <span className="flex items-center gap-1">
+                    {product.colors.map((c, i) => (
+                      <span
+                        key={i}
+                        className="px-2.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wider border"
+                        style={{
+                          background: 'rgba(236, 72, 153, 0.08)',
+                          borderColor: 'rgba(236, 72, 153, 0.25)',
+                          color: '#f472b6'
+                        }}
+                      >
+                        {c}
+                      </span>
+                    ))}
+                  </span>
+                )}
               </p>
 
               <h1

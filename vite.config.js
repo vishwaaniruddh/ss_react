@@ -40,7 +40,7 @@ export default defineConfig({
     sourcemap: false,
   },
   server: {
-    port: 5173,
+    port: 5174,
     host: true,
     // Dev-time proxy to bypass CORS on the legacy PHP API.
     //

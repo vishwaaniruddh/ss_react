@@ -1,11 +1,9 @@
-import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Heart, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import useStore from '@/store/useStore'
 import { formatPrice, productUrl } from '@/utils/helpers'
-import { cardHover, imageZoom } from '@/animations/variants'
-import ProductImage, { PRODUCT_PLACEHOLDER } from '@/components/ui/ProductImage'
+import ProductImage, { PRODUCT_PLACEHOLDER, proxyUrl } from '@/components/ui/ProductImage'
 import ComparisonButton from '@/components/ui/ComparisonButton'
 
 /**
@@ -31,6 +29,10 @@ import ComparisonButton from '@/components/ui/ComparisonButton'
  *    "no image" cards from leaking past the URL-level filtering done in
  *    the data hooks. Pass `onImageInvalid(productId)` to be notified so
  *    parent grids can also drop the card from their lists.
+ *
+ *  - On hover: images auto-cycle sequentially (0 → 1 → 2 → … → 0).
+ *    Each image waits until loaded, then displays for 3 seconds.
+ *    Small bullet dots at the bottom show the active image.
  */
 
 const isLocalPlaceholder = (src) => {
@@ -64,7 +66,28 @@ export default function ProductCard({ product, onImageInvalid }) {
   const { toggleWishlist, isInWishlist } = useStore()
   const wishlisted = isInWishlist(product.id)
 
-  const heroSrc = product.images?.[0]
+  // Stable images array — only recomputes when the product id changes
+  const images = useMemo(() => {
+    const raw =
+      Array.isArray(product.images) && product.images.length > 0
+        ? product.images
+        : [product.image, product.details?.image_path].filter(Boolean)
+    return raw.filter((img) => !isLocalPlaceholder(img))
+  }, [product.id]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const heroSrc = images[0]
+  const hasMultiple = images.length > 1
+
+  const [activeIdx, setActiveIdx] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
+
+  // Track loaded image URLs via ref (no re-render on load) + a simple
+  // boolean state for the *current* image only (minimal re-renders).
+  const loadedSetRef = useRef(new Set())
+  const [currentLoaded, setCurrentLoaded] = useState(true) // hero is assumed loaded after preflight
+
+  const currentSrc = images[activeIdx] || heroSrc
+
   // Three-state: 'pending' | 'ok' | 'invalid' — prevents flash of placeholder.
   const [imageState, setImageState] = useState(() =>
     isLocalPlaceholder(heroSrc) ? 'invalid' : 'pending',
@@ -76,31 +99,79 @@ export default function ProductCard({ product, onImageInvalid }) {
 
     if (!heroSrc || isLocalPlaceholder(heroSrc)) {
       onImageInvalid?.(product.id)
-      return () => {
-        cancelled = true
-      }
+      return () => { cancelled = true }
     }
 
     preflightImage(heroSrc).then((ok) => {
       if (cancelled) return
       if (ok) {
         setImageState('ok')
+        loadedSetRef.current.add(heroSrc)
       } else {
         setImageState('invalid')
         onImageInvalid?.(product.id)
       }
     })
 
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [heroSrc, product.id, onImageInvalid])
+
+  // When activeIdx changes, check if new image is already cached
+  useEffect(() => {
+    setCurrentLoaded(loadedSetRef.current.has(currentSrc))
+  }, [currentSrc])
+
+  // Preload all secondary images in background on first hover
+  const didPreloadRef = useRef(false)
+  useEffect(() => {
+    if (!isHovered || !hasMultiple || didPreloadRef.current) return
+    didPreloadRef.current = true
+
+    images.forEach((src) => {
+      if (src && !loadedSetRef.current.has(src)) {
+        const img = new Image()
+        img.onload = () => {
+          loadedSetRef.current.add(src)
+          // If this was the image we're currently waiting on, flip the flag
+          setActiveIdx((cur) => {
+            if (images[cur] === src) setCurrentLoaded(true)
+            return cur // don't actually change index
+          })
+        }
+        img.src = src
+      }
+    })
+  }, [isHovered, hasMultiple, images])
+
+  // Auto-advance: wait for loaded, then hold 3 seconds, then next
+  useEffect(() => {
+    if (!isHovered || !hasMultiple || !currentLoaded) return
+
+    const timer = setTimeout(() => {
+      setActiveIdx((prev) => (prev + 1) % images.length)
+    }, 3000)
+
+    return () => clearTimeout(timer)
+  }, [isHovered, hasMultiple, currentLoaded, activeIdx, images.length])
+
+  const handleMouseEnter = useCallback(() => setIsHovered(true), [])
+  const handleMouseLeave = useCallback(() => {
+    setIsHovered(false)
+    setActiveIdx(0)
+    setCurrentLoaded(true) // hero is always loaded
+  }, [])
 
   const handleWishlistClick = (e) => {
     e.preventDefault()
     e.stopPropagation()
     toggleWishlist(product)
   }
+
+  // Called by ProductImage's underlying <img> onLoad
+  const handleImageLoad = useCallback(() => {
+    loadedSetRef.current.add(currentSrc)
+    setCurrentLoaded(true)
+  }, [currentSrc])
 
   // Don't render the card at all when the image is known-bad.
   if (imageState === 'invalid') return null
@@ -109,15 +180,15 @@ export default function ProductCard({ product, onImageInvalid }) {
   if (imageState === 'pending') return null
 
   return (
-    <motion.article
-      className="group relative"
-      variants={cardHover}
-      initial="rest"
-      whileHover="hover"
-      layout
+    <article
+      className="group relative transition-transform duration-400 ease-out hover:scale-[1.02]"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <Link
         to={productUrl(product)}
+        target="_blank"
+        rel="noopener noreferrer"
         className="block"
         id={`product-${product.id}-link`}
         aria-label={`View details for ${product.name}`}
@@ -127,27 +198,57 @@ export default function ProductCard({ product, onImageInvalid }) {
           className="relative overflow-hidden rounded-xl mb-4 aspect-[2/3]"
           style={{ background: 'var(--color-charcoal)' }}
         >
-          <motion.div className="w-full h-full relative" variants={imageZoom}>
-            {/* Blurred Background to fill empty spaces */}
+          <div className="w-full h-full relative transition-transform duration-700 ease-out group-hover:scale-[1.08]">
+            {/* Blurred Background to fill empty spaces — tiny 80px micro-thumbnail */}
             <img
-              src={heroSrc}
+              src={proxyUrl(currentSrc, 80)}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover filter blur-md opacity-30 scale-105 pointer-events-none"
             />
             {/* Main Contain Image to show full product details */}
             <ProductImage
-              src={heroSrc}
+              key={currentSrc}
+              src={currentSrc}
               alt={product.name}
-              className="relative w-full h-full object-contain z-10"
+              className={`relative w-full h-full object-contain z-10 transition-opacity duration-500 ${
+                currentLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
               loading="lazy"
+              onLoad={handleImageLoad}
             />
-          </motion.div>
+          </div>
+
+          {/* Loading indicator — only while hovered and waiting for a new image */}
+          {isHovered && !currentLoaded && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+              <div
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full shadow-lg text-[11px] tracking-[0.15em] uppercase font-medium"
+                style={{
+                  background: 'rgba(0,0,0,0.7)',
+                  border: '1px solid rgba(201,169,110,0.4)',
+                  color: 'var(--color-gold)',
+                  backdropFilter: 'blur(6px)',
+                }}
+              >
+                <span
+                  className="w-3 h-3 rounded-full animate-spin"
+                  style={{
+                    border: '2px solid var(--color-gold)',
+                    borderTopColor: 'transparent',
+                  }}
+                />
+                Loading…
+              </div>
+            </div>
+          )}
 
           {/* Action buttons overlay */}
           <div className="absolute top-3 right-3 flex flex-col gap-2 z-20">
             <button
               onClick={handleWishlistClick}
-              className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300"
+              className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 cursor-pointer"
               style={{
                 background: wishlisted ? 'var(--color-gold)' : 'rgba(10, 10, 10, 0.6)',
                 border: wishlisted ? '1px solid var(--color-gold)' : '1px solid rgba(201, 169, 110, 0.3)',
@@ -160,17 +261,15 @@ export default function ProductCard({ product, onImageInvalid }) {
             <ComparisonButton product={product} variant="icon" size="md" />
           </div>
 
-          {/* "View Details" affordance on hover — replaces the old quick-view
-            * + add-to-bag pair. Pointer-events disabled so it doesn't block
-            * the underlying link click. */}
+          {/* "View Details" affordance on hover */}
           <div
-            className="absolute inset-0 z-20 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            className="absolute inset-0 z-20 flex items-end justify-center pb-9 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
             style={{
-              background: 'linear-gradient(transparent 40%, rgba(10, 10, 10, 0.7))',
+              background: 'linear-gradient(transparent 35%, rgba(10, 10, 10, 0.75))',
             }}
           >
             <span
-              className="h-11 pl-6 pr-6 rounded-full flex items-center justify-center gap-2 text-xs font-medium tracking-[0.08em] uppercase"
+              className="h-9 pl-5 pr-5 rounded-full flex items-center justify-center gap-2 text-xs font-medium tracking-[0.08em] uppercase shadow-lg backdrop-blur-sm"
               style={{
                 background: 'var(--color-gold)',
                 color: 'var(--color-obsidian)',
@@ -180,6 +279,39 @@ export default function ProductCard({ product, onImageInvalid }) {
               View Details <ArrowUpRight size={14} strokeWidth={2} />
             </span>
           </div>
+
+          {/* Pagination bullets */}
+          {hasMultiple && (
+            <div className="absolute bottom-2.5 left-0 right-0 z-30 flex items-center justify-center pointer-events-none">
+              <div
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+                style={{
+                  background: 'rgba(0,0,0,0.5)',
+                  backdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                }}
+              >
+                {images.map((_, idx) => (
+                  <span
+                    key={idx}
+                    className="rounded-full transition-all duration-300"
+                    style={{
+                      width: activeIdx === idx ? 16 : 6,
+                      height: 6,
+                      background:
+                        activeIdx === idx
+                          ? 'var(--color-gold)'
+                          : 'rgba(255,255,255,0.4)',
+                      boxShadow:
+                        activeIdx === idx
+                          ? '0 0 8px rgba(201,169,110,0.6)'
+                          : 'none',
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Badges */}
           <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
@@ -286,6 +418,6 @@ export default function ProductCard({ product, onImageInvalid }) {
           </div>
         )}
       </Link>
-    </motion.article>
+    </article>
   )
 }

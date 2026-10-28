@@ -177,6 +177,19 @@ export function normalizeApiProduct(raw) {
 
   const availability = details.availability || raw.availability || 'both'
 
+  let colors = []
+  if (Array.isArray(raw.colors)) {
+    colors = raw.colors
+  } else if (typeof raw.brand_color === 'string' && raw.brand_color.trim()) {
+    try {
+      const parsed = JSON.parse(raw.brand_color)
+      if (Array.isArray(parsed)) colors = parsed
+      else if (typeof parsed === 'string') colors = [parsed]
+    } catch {
+      colors = raw.brand_color.split(',').map(s => s.trim()).filter(Boolean)
+    }
+  }
+
   return {
     id,
     name: raw.name || 'Untitled',
@@ -186,6 +199,8 @@ export function normalizeApiProduct(raw) {
     availability,
     brand_name: raw.brand_name || null,
     size_avail: raw.size_avail || null,
+    brand_color: raw.brand_color || null,
+    colors,
 
     // Display pricing (drives ProductCard / listing pages)
     price: salePrice ?? mrp ?? 0,
@@ -347,8 +362,8 @@ export async function searchProducts({ query, limit = 8, page = 1, signal } = {}
 export const PRODUCT_SORT_OPTIONS = [
   { value: 'sku_desc',   label: 'Newest First' },
   { value: 'sku_asc',    label: 'Oldest First' },
-  { value: 'price_asc',  label: 'Price: Low to High' },
-  { value: 'price_desc', label: 'Price: High to Low' },
+  { value: 'price_asc',  label: 'Price: Low to High - Rent' },
+  { value: 'price_desc', label: 'Price: High to Low - Rent' },
   { value: 'name_asc',   label: 'Name: A to Z' },
   { value: 'name_desc',  label: 'Name: Z to A' },
 ]
@@ -376,6 +391,7 @@ export async function getProducts({
   minPrice,
   maxPrice,
   sort = 'sku_desc',
+  color,
   signal,
 } = {}) {
   const body = await apiFetch('/products.php', {
@@ -386,6 +402,7 @@ export async function getProducts({
       page,
       min_price: minPrice,
       max_price: maxPrice,
+      color,
       sort,
     },
     signal,

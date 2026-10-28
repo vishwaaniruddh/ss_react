@@ -9,6 +9,7 @@ import ComparisonBar from '@/components/ui/ComparisonBar'
 
 export default function MainLayout() {
   const location = useLocation()
+  const isHomeV2 = location.pathname === '/home-2' || location.pathname === '/home-v2'
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -17,7 +18,7 @@ export default function MainLayout() {
         <div className="flex-1">
           <Outlet />
         </div>
-        <Footer />
+        {!isHomeV2 && <Footer />}
       </PageWrapper>
       <SearchOverlay />
       <Toaster />

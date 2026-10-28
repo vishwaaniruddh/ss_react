@@ -1,10 +1,7 @@
 import { useEffect, useRef } from 'react'
-import Lenis from 'lenis'
 
 // Module-level singleton so other code (route change handlers, anchor
 // links, etc.) can reach the active Lenis instance without prop drilling.
-// Lenis hijacks window.scrollTo, so any "scroll to top on navigation" logic
-// MUST go through this singleton or it will be ignored.
 let lenisInstance = null
 
 export function getLenis() {
@@ -15,33 +12,38 @@ export function useLenis() {
   const lenisRef = useRef(null)
 
   useEffect(() => {
-    // Defer Lenis init to after first paint to avoid blocking LCP
-    // Only enable on desktop — mobile uses native scroll
-    const isMobile = window.innerWidth < 1024
-    if (isMobile) return // Skip Lenis entirely on mobile
+    // Only load and initialize Lenis on desktop (viewport >= 1024px)
+    // Dynamic import ensures mobile browsers never download or parse Lenis code
+    if (typeof window === 'undefined' || window.innerWidth < 1024) return
 
+    let isMounted = true
     const timer = setTimeout(() => {
-      const lenis = new Lenis({
-        duration: 1.0,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: 0.8,
-        touchMultiplier: 1.5,
-        infinite: false,
-      })
+      import('lenis').then(({ default: Lenis }) => {
+        if (!isMounted) return
 
-      lenisRef.current = lenis
-      lenisInstance = lenis
+        const lenis = new Lenis({
+          duration: 1.0,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          smoothWheel: true,
+          wheelMultiplier: 0.8,
+          touchMultiplier: 1.5,
+          infinite: false,
+        })
 
-      function raf(time) {
-        lenis.raf(time)
+        lenisRef.current = lenis
+        lenisInstance = lenis
+
+        function raf(time) {
+          if (!lenisRef.current) return
+          lenis.raf(time)
+          requestAnimationFrame(raf)
+        }
+
         requestAnimationFrame(raf)
-      }
-
-      requestAnimationFrame(raf)
-    }, 100)
+      })
+    }, 150)
 
     return () => {
       clearTimeout(timer)

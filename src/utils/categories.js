@@ -45,7 +45,7 @@ export const JEWELLERY_CATEGORIES = [
   },
   { label: 'Hair Accessories', slug: 'hair-accessories', type: 'jewel_main', id: 27 },
   
-  { label: 'Hath Phool', slug: 'hath-phool', type: 'jewel_main', id: 69 },
+  { label: 'Hath Phool', slug: 'hath-phool', type: 'jewel_main', id: 23 },
   { label: 'Tikka', slug: 'tikka', type: 'jewel_main', id: 63 },
 
   { label: 'Kamar Patta', slug: 'kamar-patta', type: 'jewel_main', id: 15 },
@@ -68,7 +68,7 @@ export const JEWELLERY_CATEGORIES = [
   },
   { label: 'Payal / Pag Pan', slug: 'payal-pag-pan', type: 'jewel_main', id: 65 },
   { label: 'Pendant Set', slug: 'pendant-set', type: 'jewel_main', id: 24 },
-  
+  { label: 'Ring', slug: 'ring', type: 'jewel_main', id: 18 },
 ]
 
 /**
@@ -114,6 +114,7 @@ const _byTypeId            = new Map()  // 'jewel_main:17' / 'jewel_sub:77' / 'g
   const legacyAliases = [
     { oldPath: 'necklace-sets/long-necklace-sets', newPath: 'necklace-sets/long-set' },
     { oldPath: 'necklace-sets/marathi-long-necklace', newPath: 'necklace-sets/marathi-set' },
+    { oldPath: 'rings', newPath: 'ring' },
   ]
   for (const alias of legacyAliases) {
     const target = _jewelleryBySlugPath.get(alias.newPath)
@@ -126,6 +127,12 @@ const _byTypeId            = new Map()  // 'jewel_main:17' / 'jewel_sub:77' / 'g
   for (const node of BRIDAL_CATEGORIES) {
     _bridalBySlugPath.set(node.slug, node)
     _byTypeId.set(`${node.type}:${node.id}`, node)
+  }
+
+  // Legacy type:id alias for Hath Phool (previously mapped to subcat ID 69)
+  const hathPhoolNode = _jewelleryBySlugPath.get('hath-phool')
+  if (hathPhoolNode) {
+    _byTypeId.set('jewel_main:69', hathPhoolNode)
   }
 })()
 

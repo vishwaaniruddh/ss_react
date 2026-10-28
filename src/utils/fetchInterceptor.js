@@ -3,7 +3,13 @@
  * ───────────────────────────────────────────────────────────────────────────
  * Intercepts all fetch requests to log request metadata, successful completions,
  * and detailed error bodies (including PHP error traces) on 500/failed requests.
+ *
+ * Only active in development mode to avoid performance overhead in production.
  */
+
+if (!import.meta.env?.DEV) {
+  // No-op in production
+} else {
 
 const originalFetch = window.fetch;
 
@@ -49,3 +55,5 @@ window.fetch = async function (input, init) {
     throw error;
   }
 };
+
+} // end dev-only block
