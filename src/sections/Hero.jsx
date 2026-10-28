@@ -243,7 +243,7 @@ export default function Hero() {
               className="w-full h-full object-cover object-center sm:object-right md:object-center"
               loading="eager"
               fetchpriority="high"
-              decoding="async"
+              decoding="sync"
               width="1440"
               height="768"
             />
@@ -300,7 +300,7 @@ export default function Hero() {
               >
                 {/* Eyebrow tag */}
                 <motion.div
-                  initial={{ opacity: 0, x: -15 }}
+                  initial={isFirstMount.current ? false : { opacity: 0, x: -15 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2, duration: 0.35 }}
                   className="inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border border-[rgba(201,169,110,0.4)] bg-[rgba(201,169,110,0.1)] backdrop-blur-md"
@@ -463,18 +463,9 @@ export default function Hero() {
                         {slide.label}
                       </span>
 
-                      {/* Mini progress bar */}
+                      {/* Active indicator bar */}
                       {isActive && (
-                        <div className="w-full h-[2px] bg-[rgba(201,169,110,0.15)] rounded-full mt-1 overflow-hidden">
-                          <motion.div
-                            key={current}
-                            className="h-full w-full bg-[#C9A96E] rounded-full origin-left"
-                            initial={{ scaleX: 0 }}
-                            animate={{ scaleX: 1 }}
-                            style={{ transformOrigin: 'left' }}
-                            transition={{ duration: SLIDE_DURATION / 1000, ease: 'linear' }}
-                          />
-                        </div>
+                        <div className="w-full h-[2px] bg-[#C9A96E] rounded-full mt-1 overflow-hidden" />
                       )}
                     </div>
                   </button>
