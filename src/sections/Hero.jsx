@@ -198,8 +198,12 @@ export default function Hero() {
   }
 
   // Scroll active thumbnail smoothly into view (only on user interaction, not on initial mount)
+  const isInitialSlideRef = useRef(true)
   useEffect(() => {
-    if (isFirstMount.current) return
+    if (isInitialSlideRef.current) {
+      isInitialSlideRef.current = false
+      return
+    }
     if (sliderRef.current) {
       const activeBtn = sliderRef.current.querySelector('[data-active="true"]')
       if (activeBtn) {
@@ -234,18 +238,16 @@ export default function Hero() {
           className="absolute inset-0 z-0"
         >
           <picture className="absolute inset-0 w-full h-full">
-            {active.mobileBanner && (
-              <source media="(max-width: 768px)" srcSet={active.mobileBanner} type="image/webp" />
-            )}
+            <source media="(min-width: 769px)" srcSet={active.banner} type="image/webp" />
             <img
-              src={active.banner}
+              src={active.mobileBanner || active.banner}
               alt={active.label}
               className="w-full h-full object-cover object-center sm:object-right md:object-center"
               loading="eager"
               fetchpriority="high"
               decoding="sync"
-              width="1440"
-              height="768"
+              width={active.mobileBanner ? '768' : '1440'}
+              height={active.mobileBanner ? '1024' : '768'}
             />
           </picture>
         </motion.div>
