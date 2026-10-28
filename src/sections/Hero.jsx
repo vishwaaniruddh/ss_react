@@ -13,7 +13,7 @@ const HERO_SLIDES = [
       { text: ' Store for Bridal Fashion', highlight: false },
     ],
     subtitle: 'Why buy when you can rent? Premium bridal lehengas, gowns & statement jewellery — sanitized, tailored to fit, delivered to your door.',
-    label: 'Fashion Rental',
+    label: 'Sri Shringaar luxury bridal fashion rental in Mumbai',
     banner: '/banners/rental-collection-v2.webp',
     mobileBanner: '/banners/rental-collection-mobile-v2.webp',
     thumb: '/banners/thumbs/rental-collection.webp',
@@ -228,15 +228,8 @@ export default function Hero() {
       }}
     >
       {/* ═══════ FULL-BLEED BACKGROUND WITH RESPONSIVE PICTURE ═══════ */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={active.id}
-          initial={isFirstMount.current ? false : { opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="absolute inset-0 z-0"
-        >
+      {isFirstMount.current ? (
+        <div className="absolute inset-0 z-0">
           <picture className="absolute inset-0 w-full h-full">
             <source media="(min-width: 769px)" srcSet={active.banner} type="image/webp" />
             <img
@@ -246,12 +239,37 @@ export default function Hero() {
               loading="eager"
               fetchpriority="high"
               decoding="sync"
-              width={active.mobileBanner ? '768' : '1440'}
-              height={active.mobileBanner ? '1024' : '768'}
+              width="768"
+              height="1024"
             />
           </picture>
-        </motion.div>
-      </AnimatePresence>
+        </div>
+      ) : (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active.id}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="absolute inset-0 z-0"
+          >
+            <picture className="absolute inset-0 w-full h-full">
+              <source media="(min-width: 769px)" srcSet={active.banner} type="image/webp" />
+              <img
+                src={active.mobileBanner || active.banner}
+                alt={active.label}
+                className="w-full h-full object-cover object-center sm:object-right md:object-center"
+                loading="eager"
+                fetchpriority="high"
+                decoding="sync"
+                width={active.mobileBanner ? '768' : '1440'}
+                height={active.mobileBanner ? '1024' : '768'}
+              />
+            </picture>
+          </motion.div>
+        </AnimatePresence>
+      )}
 
       {/* ═══════ RESPONSIVE GRADIENT OVERLAYS ═══════ */}
       {/* Desktop side gradient */}
