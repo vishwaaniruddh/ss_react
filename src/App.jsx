@@ -9,10 +9,16 @@ export default function App() {
   // Initialize smooth scrolling (desktop only)
   useLenis()
 
-  // Check auth session on app load
+  // Check auth session when main thread is idle
   const checkSession = useAuth((s) => s.checkSession)
   useEffect(() => {
-    checkSession()
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(() => checkSession())
+      return () => cancelIdleCallback(id)
+    } else {
+      const id = setTimeout(checkSession, 1500)
+      return () => clearTimeout(id)
+    }
   }, [checkSession])
 
   return (

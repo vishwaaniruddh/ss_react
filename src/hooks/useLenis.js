@@ -17,7 +17,12 @@ export function useLenis() {
     if (typeof window === 'undefined' || window.innerWidth < 1024) return
 
     let isMounted = true
-    const timer = setTimeout(() => {
+    let initiated = false
+
+    function init() {
+      if (initiated || !isMounted) return
+      initiated = true
+
       import('lenis').then(({ default: Lenis }) => {
         if (!isMounted) return
 
@@ -43,10 +48,18 @@ export function useLenis() {
 
         requestAnimationFrame(raf)
       })
-    }, 150)
+    }
+
+    // Trigger on first user scroll / wheel / pointer interaction, or idle timeout
+    const events = ['scroll', 'wheel', 'pointerdown', 'keydown']
+    events.forEach((ev) => window.addEventListener(ev, init, { once: true, passive: true }))
+
+    const idleTimer = setTimeout(init, 4000)
 
     return () => {
-      clearTimeout(timer)
+      isMounted = false
+      clearTimeout(idleTimer)
+      events.forEach((ev) => window.removeEventListener(ev, init))
       if (lenisRef.current) {
         lenisRef.current.destroy()
         if (lenisInstance === lenisRef.current) lenisInstance = null

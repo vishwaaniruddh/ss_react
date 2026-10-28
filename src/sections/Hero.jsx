@@ -307,7 +307,7 @@ export default function Hero() {
                   transition={{ delay: 0.2, duration: 0.35 }}
                   className="inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border border-[rgba(201,169,110,0.4)] bg-[rgba(201,169,110,0.1)] backdrop-blur-md"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#C9A96E] animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C9A96E] shadow-[0_0_8px_rgba(201,169,110,0.8)]" />
                   <span className="text-[10px] sm:text-[11px] font-semibold tracking-[0.2em] uppercase text-[#C9A96E]">
                     {active.tag}
                   </span>
