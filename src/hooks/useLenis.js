@@ -50,15 +50,12 @@ export function useLenis() {
       })
     }
 
-    // Trigger on first user scroll / wheel / pointer interaction, or idle timeout
+    // Trigger strictly on real user interaction (scroll, wheel, touch, key)
     const events = ['scroll', 'wheel', 'pointerdown', 'keydown']
     events.forEach((ev) => window.addEventListener(ev, init, { once: true, passive: true }))
 
-    const idleTimer = setTimeout(init, 4000)
-
     return () => {
       isMounted = false
-      clearTimeout(idleTimer)
       events.forEach((ev) => window.removeEventListener(ev, init))
       if (lenisRef.current) {
         lenisRef.current.destroy()

@@ -47,6 +47,7 @@ export default defineConfig({
     },
     cssCodeSplit: true,
     sourcemap: false,
+    modulePreload: false,
   },
   server: {
     port: 5174,
