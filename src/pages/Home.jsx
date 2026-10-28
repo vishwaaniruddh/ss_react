@@ -2,9 +2,10 @@ import { lazy, Suspense } from 'react'
 import SEO from '@/seo/SEO'
 import { organizationSchema } from '@/seo/schemas'
 import Hero from '@/sections/Hero'
-import MarqueeSection from '@/sections/MarqueeSection'
+import InViewSection from '@/components/ui/InViewSection'
 
-// Lazy-load below-fold sections to reduce initial bundle and main-thread work
+// Truly lazy below-the-fold sections — only downloaded & mounted when scrolled near
+const MarqueeSection = lazy(() => import('@/sections/MarqueeSection'))
 const BridalShowcase = lazy(() => import('@/sections/BridalShowcase'))
 const FeaturedProducts = lazy(() => import('@/sections/FeaturedProducts'))
 const CollectionsGrid = lazy(() => import('@/sections/CollectionsGrid'))
@@ -26,13 +27,34 @@ export default function Home() {
       />
 
       <Hero />
-      <MarqueeSection />
-      <LazySection><BridalShowcase /></LazySection>
-      <LazySection><FeaturedProducts /></LazySection>
-      <LazySection><CollectionsGrid /></LazySection>
-      <LazySection><RentalProcess /></LazySection>
-      <LazySection><VideoSection /></LazySection>
-      <LazySection><TestimonialSection /></LazySection>
+
+      <InViewSection minHeight="120px">
+        <LazySection><MarqueeSection /></LazySection>
+      </InViewSection>
+
+      <InViewSection minHeight="600px">
+        <LazySection><BridalShowcase /></LazySection>
+      </InViewSection>
+
+      <InViewSection minHeight="600px">
+        <LazySection><FeaturedProducts /></LazySection>
+      </InViewSection>
+
+      <InViewSection minHeight="500px">
+        <LazySection><CollectionsGrid /></LazySection>
+      </InViewSection>
+
+      <InViewSection minHeight="400px">
+        <LazySection><RentalProcess /></LazySection>
+      </InViewSection>
+
+      <InViewSection minHeight="400px">
+        <LazySection><VideoSection /></LazySection>
+      </InViewSection>
+
+      <InViewSection minHeight="500px">
+        <LazySection><TestimonialSection /></LazySection>
+      </InViewSection>
     </>
   )
 }

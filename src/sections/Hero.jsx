@@ -136,12 +136,13 @@ export default function Hero() {
     isFirstMount.current = false
   }, [])
 
-  // Lazily preload ONLY the upcoming slide to conserve bandwidth on mobile
+  // Lazily preload ONLY the upcoming slide after initial page has completely settled
   useEffect(() => {
     const nextIdx = (current + 1) % totalSlides
     const nextSlide = HERO_SLIDES[nextIdx]
     if (!nextSlide) return
 
+    const delay = current === 0 ? 6000 : 1500
     const timer = setTimeout(() => {
       const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
       const targetSrc = isMobile && nextSlide.mobileBanner ? nextSlide.mobileBanner : nextSlide.banner
@@ -149,15 +150,27 @@ export default function Hero() {
         const img = new Image()
         img.src = targetSrc
       }
-    }, 1500)
+    }, delay)
 
     return () => clearTimeout(timer)
   }, [current, totalSlides])
 
-  // Autoplay
+  // Autoplay — disabled on mobile touch screens to prevent LCP reset and CPU jank;
+  // on desktop, begins only after initial page settle (12s delay)
   useEffect(() => {
-    const timer = setInterval(nextSlide, SLIDE_DURATION)
-    return () => clearInterval(timer)
+    if (typeof window === 'undefined') return
+    const isTouch = window.innerWidth < 1024 || window.matchMedia('(pointer: coarse)').matches
+    if (isTouch) return
+
+    let intervalId = null
+    const delayTimer = setTimeout(() => {
+      intervalId = setInterval(nextSlide, SLIDE_DURATION)
+    }, 12000)
+
+    return () => {
+      clearTimeout(delayTimer)
+      if (intervalId) clearInterval(intervalId)
+    }
   }, [nextSlide, current])
 
   // Keyboard navigation
